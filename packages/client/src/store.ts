@@ -3,7 +3,7 @@ import { NotificationSeverity } from '~/common';
 
 export const chatDirectionAtom: PrimitiveAtom<string> & {
   init: string;
-} = atom<string>('ltr');
+} = atom<string>('auto');
 export const fontSizeAtom: PrimitiveAtom<string> & {
   init: string;
 } = atom<string>('text-base');

@@ -57,7 +57,7 @@ const FileContainer = ({
           <div className="flex flex-row items-center gap-2">
             <FilePreview file={file} fileType={fileType} className="relative" />
             <div className="overflow-hidden">
-              <div className="truncate font-medium" title={visibleName}>
+              <div className="truncate font-medium" title={visibleName} dir="auto">
                 {visibleName}
               </div>
               {subtitle != null ? (

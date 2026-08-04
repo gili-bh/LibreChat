@@ -590,6 +590,7 @@ const ChatForm = memo(function ChatForm({
                   >
                     <TextareaAutosize
                       {...registerProps}
+                      dir="auto"
                       ref={(e) => {
                         ref(e);
                         (

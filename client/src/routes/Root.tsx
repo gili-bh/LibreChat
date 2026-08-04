@@ -24,6 +24,7 @@ import { UnifiedSidebar } from '~/components/UnifiedSidebar';
 import { TermsAndConditionsModal } from '~/components/ui';
 import { useHealthCheck } from '~/data-provider';
 import { Banner } from '~/components/Banners';
+import { cn } from '~/utils';
 import store from '~/store';
 
 /** Isolates keyboard shortcut listeners so they only mount after auth. */
@@ -88,10 +89,13 @@ export default function Root() {
                 <div className="relative z-0 flex h-full w-full overflow-hidden">
                   <UnifiedSidebar />
                   <div
-                    className="relative flex h-full max-w-full flex-1 flex-col overflow-hidden"
+                    className={cn(
+                      'relative flex h-full max-w-full flex-1 flex-col overflow-hidden',
+                      isSmallScreen &&
+                        sidebarExpanded &&
+                        'translate-x-[min(85vw,380px)] rtl:-translate-x-[min(85vw,380px)]',
+                    )}
                     style={{
-                      transform:
-                        isSmallScreen && sidebarExpanded ? 'translateX(min(85vw, 380px))' : 'none',
                       transition: 'transform 300ms cubic-bezier(0.2, 0, 0, 1)',
                     }}
                     inert={isSmallScreen && sidebarExpanded ? '' : undefined}

@@ -40,6 +40,7 @@ const SecretInput: React.ForwardRefExoticComponent<
       copyFeedbackDuration = 2000,
       disabled,
       value,
+      dir = 'ltr',
       ...props
     },
     ref,
@@ -80,11 +81,12 @@ const SecretInput: React.ForwardRefExoticComponent<
           id={id}
           type={isVisible ? 'text' : 'password'}
           className={cn(
-            'flex h-10 w-full rounded-lg border border-border-light bg-transparent py-2 pl-3 text-sm transition-colors placeholder:text-muted-foreground hover:border-border-medium focus-visible:border-border-heavy focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+            'flex h-10 w-full rounded-lg border border-border-light bg-transparent py-2 ps-3 text-sm transition-colors placeholder:text-muted-foreground hover:border-border-medium focus-visible:border-border-heavy focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
             className ?? '',
-            copyButton != null || showCopy ? 'pr-20' : 'pr-11',
+            copyButton != null || showCopy ? 'pe-20' : 'pe-11',
           )}
           ref={ref}
+          dir={dir}
           disabled={disabled}
           value={value}
           autoComplete="off"
@@ -98,7 +100,7 @@ const SecretInput: React.ForwardRefExoticComponent<
         )}
         <div
           className={cn(
-            'pointer-events-none absolute inset-y-0 right-1.5 flex items-center gap-0.5 [&_button]:pointer-events-auto',
+            'pointer-events-none absolute inset-y-0 end-1.5 flex items-center gap-0.5 [&_button]:pointer-events-auto',
             controlsOnHover &&
               'opacity-0 transition-opacity duration-150 group-focus-within/secret-input:opacity-100 group-hover/secret-input:opacity-100',
             controlsClassName,

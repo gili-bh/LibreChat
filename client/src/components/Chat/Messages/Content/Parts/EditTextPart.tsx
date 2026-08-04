@@ -184,7 +184,7 @@ const EditTextPart = ({
             removeFocusRings,
           )}
           aria-label={localize('com_ui_editable_message')}
-          dir={isRTL ? 'rtl' : 'ltr'}
+          dir="auto"
         />
       </div>
       <div className="mt-2 flex w-full justify-center text-center">

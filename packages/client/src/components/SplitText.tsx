@@ -41,6 +41,7 @@ interface SplitTextProps {
   threshold?: number;
   rootMargin?: string;
   textAlign?: 'left' | 'right' | 'center' | 'justify' | 'start' | 'end';
+  dir?: 'auto' | 'ltr' | 'rtl';
   onLetterAnimationComplete?: () => void;
   onLineCountChange?: (lineCount: number) => void;
 }
@@ -68,6 +69,7 @@ const SplitText: React.FC<SplitTextProps> = ({
   threshold = 0.1,
   rootMargin = '-100px',
   textAlign = 'center',
+  dir = 'auto',
   onLetterAnimationComplete,
   onLineCountChange,
 }) => {
@@ -138,6 +140,7 @@ const SplitText: React.FC<SplitTextProps> = ({
       <span className="sr-only">{text}</span>
       <p
         ref={ref}
+        dir={dir}
         className={`split-parent inline overflow-hidden ${className}`}
         style={{ textAlign, whiteSpace: 'normal', wordWrap: 'break-word' }}
         aria-hidden="true"

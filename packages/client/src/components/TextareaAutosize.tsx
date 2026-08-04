@@ -27,6 +27,7 @@ export const TextareaAutosize: ForwardRefExoticComponent<
 > = forwardRef<HTMLTextAreaElement, TextareaAutosizePropsWithAria>((props, ref) => {
   const [, setIsRerendered] = useState(false);
   const chatDirection = useAtomValue(chatDirectionAtom).toLowerCase();
+  const { dir = chatDirection, ...textareaProps } = props;
   useLayoutEffect(() => setIsRerendered(true), []);
-  return <ReactTextareaAutosize dir={chatDirection} {...props} ref={ref} />;
+  return <ReactTextareaAutosize dir={dir} {...textareaProps} ref={ref} />;
 });

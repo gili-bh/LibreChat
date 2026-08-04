@@ -89,6 +89,7 @@ function RequestPasswordReset() {
         <div className="relative">
           <input
             type="email"
+            dir="ltr"
             id="email"
             autoComplete="off"
             aria-label={localize('com_auth_email')}

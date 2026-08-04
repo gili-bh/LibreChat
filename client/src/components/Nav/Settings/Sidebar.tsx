@@ -29,11 +29,12 @@ export default function Sidebar({
     <div className="flex w-full flex-col gap-3 md:w-[230px]">
       <div className="relative">
         <Search
-          className="pointer-events-none absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-text-tertiary"
+          className="pointer-events-none absolute start-2 top-1/2 h-4 w-4 -translate-y-1/2 text-text-tertiary"
           aria-hidden="true"
         />
         <input
           type="text"
+          dir="auto"
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           onKeyDown={(e) => {
@@ -45,14 +46,14 @@ export default function Sidebar({
           }}
           placeholder={localize('com_ui_settings_search_placeholder')}
           aria-label={localize('com_ui_settings_search_placeholder')}
-          className="w-full rounded-lg bg-surface-secondary py-2 pl-8 pr-8 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-border-xheavy"
+          className="w-full rounded-lg bg-surface-secondary py-2 pe-8 ps-8 text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-border-xheavy"
         />
         {query.length > 0 && (
           <button
             type="button"
             onClick={() => onQueryChange('')}
             aria-label={localize('com_ui_clear_search')}
-            className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-md p-1 text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-border-xheavy"
+            className="absolute end-1.5 top-1/2 -translate-y-1/2 rounded-md p-1 text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-border-xheavy"
           >
             <X className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -79,7 +80,7 @@ export default function Sidebar({
               </span>
               {showChevron && (
                 <ChevronRight
-                  className="h-4 w-4 flex-shrink-0 text-text-tertiary"
+                  className="h-4 w-4 flex-shrink-0 text-text-tertiary rtl:rotate-180"
                   aria-hidden="true"
                 />
               )}

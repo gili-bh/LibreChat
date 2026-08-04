@@ -2,6 +2,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import translationEn from './en/translation.json';
+import { DEFAULT_LOCALE } from './constants';
 
 export const defaultNS = 'translation';
 
@@ -153,7 +154,7 @@ const localeAliases: Record<string, SupportedLocale> = {
 const loadedLocales = new Set<SupportedLocale>(['en']);
 const loadingLocales: Partial<Record<SupportedLocale, Promise<SupportedLocale>>> = {};
 let languageRequestId = 0;
-let latestRequestedLocale: SupportedLocale = 'en';
+let latestRequestedLocale: SupportedLocale = DEFAULT_LOCALE;
 
 function readCookie(name: string) {
   if (typeof document === 'undefined') {
@@ -218,7 +219,7 @@ export function normalizeLocale(locale?: string | null): SupportedLocale {
 export function detectInitialLanguage() {
   const cookieLang = readCookie('lang');
   const storedLang = readStoredLanguage();
-  return normalizeLocale(cookieLang || storedLang || getNavigatorLanguage());
+  return normalizeLocale(cookieLang || storedLang || DEFAULT_LOCALE);
 }
 
 export async function ensureLocale(locale?: string | null): Promise<SupportedLocale> {
@@ -286,7 +287,7 @@ export function syncDocumentLanguage(locale: SupportedLocale) {
 }
 
 export const i18nInitPromise = i18n.use(initReactI18next).init({
-  lng: 'en',
+  lng: DEFAULT_LOCALE,
   fallbackLng: {
     'zh-TW': ['zh-Hant', 'en'],
     'zh-HK': ['zh-Hant', 'en'],

@@ -180,7 +180,7 @@ const EditMessage = ({
             removeFocusRings,
           )}
           aria-label={localize('com_ui_message_input')}
-          dir={isRTL ? 'rtl' : 'ltr'}
+          dir="auto"
         />
       </div>
       <div className="mt-2 flex w-full justify-center text-center">

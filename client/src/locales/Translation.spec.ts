@@ -3,6 +3,7 @@ import {
   __resetLocaleForTests,
   __setLocaleLoaderForTests,
   changeLanguageSafely,
+  detectInitialLanguage,
   ensureLocale,
   initializeI18n,
   normalizeLocale,
@@ -31,7 +32,32 @@ describe('i18next translation tests', () => {
   });
 
   afterEach(async () => {
+    localStorage.removeItem('lang');
+    document.cookie = 'lang=; Max-Age=0; path=/';
     await changeLanguageSafely('en');
+  });
+
+  it('should default new users to Hebrew', () => {
+    localStorage.removeItem('lang');
+    document.cookie = 'lang=; Max-Age=0; path=/';
+
+    expect(detectInitialLanguage()).toBe('he');
+  });
+
+  it('should preserve a stored language choice', () => {
+    localStorage.setItem('lang', JSON.stringify('fr'));
+
+    expect(detectInitialLanguage()).toBe('fr');
+  });
+
+  it('should synchronize the document direction with the selected language', async () => {
+    await changeLanguageSafely('he');
+    expect(document.documentElement).toHaveAttribute('lang', 'he');
+    expect(document.documentElement).toHaveAttribute('dir', 'rtl');
+
+    await changeLanguageSafely('en');
+    expect(document.documentElement).toHaveAttribute('lang', 'en');
+    expect(document.documentElement).toHaveAttribute('dir', 'ltr');
   });
 
   it('should return the correct translation for a valid key in English', async () => {

@@ -73,7 +73,9 @@ function UnifiedSidebar() {
       }
       rafId = requestAnimationFrame(() => {
         rafId = null;
-        const next = Math.max(EXPANDED_MIN, Math.min(e.clientX, maxWidth));
+        const pointerWidth =
+          document.documentElement.dir === 'rtl' ? window.innerWidth - e.clientX : e.clientX;
+        const next = Math.max(EXPANDED_MIN, Math.min(pointerWidth, maxWidth));
         setSidebarWidth(next);
       });
     };
@@ -137,8 +139,8 @@ function UnifiedSidebar() {
       <>
         <div
           className={cn(
-            'fixed left-0 top-0 z-[110] flex h-full bg-surface-primary-alt',
-            expanded ? 'translate-x-0' : '-translate-x-full',
+            'fixed start-0 top-0 z-[110] flex h-full bg-surface-primary-alt',
+            expanded ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full',
           )}
           style={{
             width: 'min(85vw, 380px)',
