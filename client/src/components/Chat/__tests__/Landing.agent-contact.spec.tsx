@@ -6,6 +6,7 @@ import Landing from '../Landing';
 let mockConversation: Record<string, unknown> | null = null;
 let mockAgentsMap: Record<string, any> | undefined;
 let mockAssistantMap: Record<string, any> | undefined;
+let mockUser: { name?: string; username?: string } | undefined;
 
 jest.mock('@react-spring/web', () => ({
   easings: {
@@ -42,8 +43,8 @@ jest.mock('~/data-provider', () => ({
 }));
 
 jest.mock('~/hooks', () => ({
-  useAuthContext: () => ({ user: undefined }),
-  useLocalize: () => (key: string) => {
+  useAuthContext: () => ({ user: mockUser }),
+  useLocalize: () => (key: string, options?: { name?: string }) => {
     const translations: Record<string, string> = {
       com_agents_contact: 'Contact',
       com_agents_no_contact_available: 'No contact available',
@@ -52,7 +53,12 @@ jest.mock('~/hooks', () => ({
       com_ui_good_evening: 'Good evening',
       com_ui_late_night: 'Good evening',
       com_ui_weekend_morning: 'Good morning',
+      com_ui_branded_home_description:
+        'העוזר הארגוני כאן כדי לעזור לך בכתיבה, ניתוח מסמכים, מענה על שאלות והפקת תובנות מקצועיות.',
     };
+    if (key === 'com_ui_branded_home_welcome') {
+      return `שלום ${options?.name ?? ''}, במה אפשר לסייע לך היום?`;
+    }
     return translations[key] || key;
   },
 }));
@@ -94,6 +100,21 @@ describe('Landing agent contact', () => {
     mockConversation = null;
     mockAgentsMap = undefined;
     mockAssistantMap = undefined;
+    mockUser = undefined;
+  });
+
+  it('shows the branded greeting with the authenticated user name', () => {
+    mockUser = { name: 'אהוד', username: 'ehud' };
+
+    render(<Landing centerFormOnLanding={false} />);
+
+    expect(screen.getByText('שלום אהוד, במה אפשר לסייע לך היום?')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'העוזר הארגוני כאן כדי לעזור לך בכתיבה, ניתוח מסמכים, מענה על שאלות והפקת תובנות מקצועיות.',
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('img')).toHaveAttribute('src', 'assets/branding/logo.svg');
   });
 
   it('shows contact for the selected agent from agentsMap', () => {

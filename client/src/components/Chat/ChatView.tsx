@@ -15,6 +15,7 @@ import {
   useLocalize,
 } from '~/hooks';
 import { ChatContext, AddedChatContext, ChatFormProvider, useFileMapContext } from '~/Providers';
+import BrandedConversationStarters from './Input/BrandedConversationStarters';
 import ConversationStarters from './Input/ConversationStarters';
 import { useGetMessagesByConvoId } from '~/data-provider';
 import ProjectLandingChip from './ProjectLandingChip';
@@ -121,7 +122,7 @@ function ChatView({ index = 0, project }: { index?: number; project?: TChatProje
                   className={cn(
                     'flex flex-col',
                     isLandingPage
-                      ? 'flex-1 items-center justify-end sm:justify-center'
+                      ? 'min-h-0 flex-1 items-center justify-start overflow-y-auto pt-14 sm:justify-center sm:pt-0'
                       : 'h-full overflow-y-auto',
                   )}
                 >
@@ -133,6 +134,7 @@ function ChatView({ index = 0, project }: { index?: number; project?: TChatProje
                     )}
                   >
                     {isProjectLandingPage && project && <ProjectLandingChip project={project} />}
+                    {isLandingPage && <BrandedConversationStarters />}
                     {isLandingPage && <ConversationStarters />}
                     <ChatForm index={index} placeholder={chatFormPlaceholder} />
                     {!isLandingPage && <Footer />}

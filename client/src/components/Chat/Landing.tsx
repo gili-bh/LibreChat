@@ -5,7 +5,6 @@ import { BirthdayIcon, TooltipAnchor, SplitText } from '@librechat/client';
 import {
   getIconEndpoint,
   getEntity,
-  getModelSpec,
   createConfigHtmlSanitizer,
   CONFIG_HTML_MEDIA_TAGS,
   CONFIG_HTML_MEDIA_ATTR,
@@ -74,17 +73,14 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
     assistant_id: conversation?.assistant_id,
   });
 
-  const modelSpec = useMemo(
-    () => getModelSpec({ specName: conversation?.spec, startupConfig }),
-    [conversation?.spec, startupConfig],
-  );
-
-  const brandedSpecLabel = modelSpec?.showOnLanding ? modelSpec.label : '';
-  const brandedSpecDescription = (modelSpec?.showOnLanding && modelSpec.description) || '';
-  const name = entity?.name ?? brandedSpecLabel;
-  const description =
-    (entity?.description || brandedSpecDescription || conversation?.greeting) ?? '';
-  const descriptionIsHTML = description.trim().startsWith('<');
+  const name = entity?.name ?? '';
+  const isBrandedLanding = !entity;
+  const userDisplayName = user?.name?.trim() || user?.username?.trim() || localize('com_nav_user');
+  const greetingText = localize('com_ui_branded_home_welcome', { name: userDisplayName });
+  const description = isBrandedLanding
+    ? localize('com_ui_branded_home_description')
+    : ((entity?.description || conversation?.greeting) ?? '');
+  const descriptionIsHTML = !isBrandedLanding && description.trim().startsWith('<');
 
   const sanitizeDescription = useMemo(
     () =>
@@ -96,43 +92,6 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
   );
   const selectedAgent =
     isAgent && conversation?.agent_id != null ? agentsMap?.[conversation.agent_id] : undefined;
-
-  const getGreeting = useCallback(() => {
-    if (typeof startupConfig?.interface?.customWelcome === 'string') {
-      const customWelcome = startupConfig.interface.customWelcome;
-      // Replace {{user.name}} with actual user name if available
-      if (user?.name && customWelcome.includes('{{user.name}}')) {
-        return customWelcome.replace(/{{user.name}}/g, user.name);
-      }
-      return customWelcome;
-    }
-
-    const now = new Date();
-    const hours = now.getHours();
-
-    const dayOfWeek = now.getDay();
-    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-
-    // Early morning (midnight to 4:59 AM)
-    if (hours >= 0 && hours < 5) {
-      return localize('com_ui_late_night');
-    }
-    // Morning (6 AM to 11:59 AM)
-    else if (hours < 12) {
-      if (isWeekend) {
-        return localize('com_ui_weekend_morning');
-      }
-      return localize('com_ui_good_morning');
-    }
-    // Afternoon (12 PM to 4:59 PM)
-    else if (hours < 17) {
-      return localize('com_ui_good_afternoon');
-    }
-    // Evening (5 PM to 8:59 PM)
-    else {
-      return localize('com_ui_good_evening');
-    }
-  }, [localize, startupConfig?.interface?.customWelcome, user?.name]);
 
   const handleLineCountChange = useCallback((count: number) => {
     setTextHasMultipleLines(count > 1);
@@ -165,30 +124,39 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
     return margin;
   }, [lineCount, description, textHasMultipleLines, contentHeight]);
 
-  const greetingText =
-    typeof startupConfig?.interface?.customWelcome === 'string'
-      ? getGreeting()
-      : getGreeting() + (user?.name ? ', ' + user.name : '');
-
   return (
     <div
       className={`flex h-full transform-gpu flex-col items-center justify-center pb-16 transition-all duration-200 ${centerFormOnLanding ? 'max-h-full sm:max-h-0' : 'max-h-full'} ${getDynamicMargin}`}
     >
       <div ref={contentRef} className="flex flex-col items-center gap-0 p-2">
         <div
-          className={`flex ${textHasMultipleLines ? 'flex-col' : 'flex-col md:flex-row'} items-center justify-center gap-2`}
+          className={`flex ${isBrandedLanding || textHasMultipleLines ? 'flex-col' : 'flex-col md:flex-row'} items-center justify-center gap-2`}
         >
-          <div className={`relative size-10 justify-center ${textHasMultipleLines ? 'mb-2' : ''}`}>
-            <ConvoIcon
-              agentsMap={agentsMap}
-              assistantMap={assistantMap}
-              conversation={conversation}
-              endpointsConfig={endpointsConfig}
-              containerClassName={containerClassName}
-              context="landing"
-              className="h-2/3 w-2/3 text-black dark:text-white"
-              size={41}
-            />
+          <div
+            className={
+              isBrandedLanding
+                ? 'relative mb-3 flex h-14 w-full max-w-64 items-center justify-center sm:h-16'
+                : `relative size-10 justify-center ${textHasMultipleLines ? 'mb-2' : ''}`
+            }
+          >
+            {isBrandedLanding ? (
+              <img
+                src="assets/branding/logo.svg"
+                className="h-full w-auto max-w-full object-contain"
+                alt={localize('com_ui_logo', { 0: startupConfig?.appTitle ?? '' })}
+              />
+            ) : (
+              <ConvoIcon
+                agentsMap={agentsMap}
+                assistantMap={assistantMap}
+                conversation={conversation}
+                endpointsConfig={endpointsConfig}
+                containerClassName={containerClassName}
+                context="landing"
+                className="h-2/3 w-2/3 text-black dark:text-white"
+                size={41}
+              />
+            )}
             {startupConfig?.showBirthdayIcon && (
               <TooltipAnchor
                 className="absolute bottom-[27px] right-2"
@@ -217,9 +185,9 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
             </div>
           ) : (
             <SplitText
-              key={`split-text-${greetingText}${user?.name ? '-user' : ''}`}
+              key={`split-text-${greetingText}`}
               text={greetingText}
-              className={`${getTextSizeClass(greetingText)} font-medium text-text-primary`}
+              className="text-xl font-medium text-text-primary sm:text-2xl"
               delay={50}
               textAlign="center"
               animationFrom={greetingAnimationFrom}

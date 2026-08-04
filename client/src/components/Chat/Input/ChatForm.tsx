@@ -709,6 +709,9 @@ const ChatForm = memo(function ChatForm({
               {TextToSpeech && automaticPlayback && <StreamAudio index={index} />}
             </div>
           </div>
+          <p role="note" className="px-4 pt-2 text-center text-xs leading-5 text-text-tertiary">
+            {localize('com_ui_privacy_notice')}
+          </p>
         </div>
       </div>
     </form>
