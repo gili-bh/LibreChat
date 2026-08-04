@@ -71,7 +71,7 @@ export default function Sidebar({
               onClick={() => onSelectTab(tab.id)}
               className={cn(
                 'flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm text-text-secondary transition-colors hover:bg-surface-hover md:py-2',
-                'radix-state-active:bg-surface-tertiary radix-state-active:text-text-primary',
+                'radix-state-active:bg-surface-active radix-state-active:text-brand-link',
               )}
             >
               <span className="flex items-center gap-2">

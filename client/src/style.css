@@ -8,6 +8,15 @@
 
 /* Custom Variables */
 :root {
+  --brand-primary: #ff321a;
+  --brand-primary-hover: #eb2d17;
+  --brand-primary-foreground: #0c0d0c;
+  --brand-link: #c92716;
+  --brand-selected: #fff0ed;
+  --brand-black: #0c0d0c;
+  --brand-white: #ffffff;
+  --brand-background: #f7f7f7;
+  --brand-border: #e5e5e5;
   --white: #fff;
   --black: #000;
   --gray-20: #ececf1;
@@ -136,34 +145,34 @@
 html {
   --brand-purple: #ab68ff;
   --presentation: var(--white);
-  --text-primary: var(--gray-800);
+  --text-primary: var(--brand-black);
   --text-secondary: var(--gray-600);
   --text-secondary-alt: var(--gray-500);
   --text-tertiary: var(--gray-500);
   --text-warning: var(--amber-500);
   --text-destructive: var(--red-600);
-  --ring-primary: var(--gray-500);
+  --ring-primary: var(--brand-primary);
   --header-primary: var(--white);
   --header-hover: var(--gray-50);
   --header-button-hover: var(--gray-50);
-  --surface-active: var(--gray-100);
+  --surface-active: var(--brand-selected);
   --surface-active-alt: var(--gray-200);
   --surface-hover: var(--gray-200);
   --surface-hover-alt: var(--gray-300);
   --surface-primary: var(--white);
-  --surface-primary-alt: var(--gray-50);
+  --surface-primary-alt: var(--brand-background);
   --surface-primary-contrast: var(--gray-100);
-  --surface-secondary: var(--gray-50);
+  --surface-secondary: var(--brand-background);
   --surface-secondary-alt: var(--gray-200);
   --surface-tertiary: var(--gray-100);
   --surface-tertiary-alt: var(--white);
   --surface-dialog: var(--white);
-  --surface-submit: var(--green-700);
-  --surface-submit-hover: var(--green-800);
+  --surface-submit: var(--brand-primary);
+  --surface-submit-hover: var(--brand-primary-hover);
   --surface-destructive: var(--red-700);
   --surface-destructive-hover: var(--red-800);
   --surface-chat: var(--white);
-  --border-light: var(--gray-200);
+  --border-light: var(--brand-border);
   --border-medium-alt: var(--gray-300);
   --border-medium: var(--gray-300);
   --border-heavy: var(--gray-400);
@@ -175,8 +184,8 @@ html {
   --foreground: 0 0% 3.9%;
   --card: 0 0% 100%;
   --card-foreground: 0 0% 3.9%;
-  --primary: 0 0% 9%;
-  --primary-foreground: 0 0% 98%;
+  --primary: 5.9 100% 55.1%;
+  --primary-foreground: 120 4% 5%;
   --secondary: 0 0% 96.1%;
   --secondary-foreground: 0 0% 9%;
   --muted: 0 0% 96.1%;
@@ -187,7 +196,7 @@ html {
   --destructive-foreground: 0 0% 98%;
   --border: 0 0% 89.8%;
   --input: 0 0% 89.8%;
-  --ring: 0 0% 3.9%;
+  --ring: 5.9 100% 55.1%;
   --radius: 0.5rem;
   --chart-1: 12 76% 61%;
   --chart-2: 173 58% 39%;
@@ -197,6 +206,11 @@ html {
   --switch-unchecked: 0 0% 58%;
 }
 .dark {
+  --brand-primary: #d92d20;
+  --brand-primary-hover: #c92716;
+  --brand-primary-foreground: #ffffff;
+  --brand-link: #ff6b57;
+  --brand-selected: rgba(217, 45, 32, 0.2);
   --brand-purple: #ab68ff;
   --presentation: var(--gray-800);
   --text-primary: var(--gray-100);
@@ -220,8 +234,8 @@ html {
   --surface-tertiary: var(--gray-700);
   --surface-tertiary-alt: var(--gray-700);
   --surface-dialog: var(--gray-850);
-  --surface-submit: var(--green-700);
-  --surface-submit-hover: var(--green-800);
+  --surface-submit: var(--brand-primary);
+  --surface-submit-hover: var(--brand-primary-hover);
   --surface-destructive: var(--red-800);
   --surface-destructive-hover: var(--red-900);
   --surface-chat: var(--gray-700);
@@ -237,8 +251,8 @@ html {
   --foreground: 0 0% 98%;
   --card: 0 0% 3.9%;
   --card-foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 0 0% 9%;
+  --primary: 4.6 74.6% 48.8%;
+  --primary-foreground: 0 0% 100%;
   --secondary: 0 0% 14.9%;
   --secondary-foreground: 0 0% 98%;
   --muted: 0 0% 14.9%;
@@ -249,7 +263,7 @@ html {
   --destructive-foreground: 0 0% 98%;
   --border: 0 0% 14.9%;
   --input: 0 0% 14.9%;
-  --ring: 0 0% 83.1%;
+  --ring: 6.4 100% 67.1%;
   --chart-1: 220 70% 50%;
   --chart-2: 160 60% 45%;
   --chart-3: 30 80% 55%;
@@ -1074,7 +1088,7 @@ pre {
   --tw-prose-body: #424242;
   --tw-prose-headings: #111827;
   --tw-prose-lead: #4b5563;
-  --tw-prose-links: #0066cc;
+  --tw-prose-links: var(--brand-link);
   --tw-prose-bold: #111827;
   --tw-prose-counters: #6b7280;
   --tw-prose-bullets: #d1d5db;
@@ -1090,7 +1104,7 @@ pre {
   --tw-prose-invert-body: #d1d5db;
   --tw-prose-invert-headings: #fff;
   --tw-prose-invert-lead: #9ca3af;
-  --tw-prose-invert-links: #fff;
+  --tw-prose-invert-links: var(--brand-link);
   --tw-prose-invert-bold: #fff;
   --tw-prose-invert-counters: #9ca3af;
   --tw-prose-invert-bullets: #4b5563;
@@ -1432,14 +1446,11 @@ button {
   opacity: 0.5;
 }
 .btn-primary {
-  --tw-bg-opacity: 1;
-  --tw-text-opacity: 1;
-  background-color: rgba(16, 163, 127, var(--tw-bg-opacity));
-  color: rgba(255, 255, 255, var(--tw-text-opacity));
+  background-color: var(--brand-primary);
+  color: var(--brand-primary-foreground);
 }
 .btn-primary:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgba(26, 127, 100, var(--tw-bg-opacity));
+  background-color: var(--brand-primary-hover);
 }
 .btn-primary:focus {
   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width)
@@ -1455,16 +1466,13 @@ button {
     var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 transparent);
 }
 .btn-primary.focus-visible {
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgba(25, 195, 125, var(--tw-ring-opacity));
+  --tw-ring-color: var(--ring-primary);
 }
 .btn-primary:focus-visible {
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgba(25, 195, 125, var(--tw-ring-opacity));
+  --tw-ring-color: var(--ring-primary);
 }
 .btn-primary:disabled:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgba(16, 163, 127, var(--tw-bg-opacity));
+  background-color: var(--brand-primary);
 }
 .btn-secondary {
   --tw-border-opacity: 1;

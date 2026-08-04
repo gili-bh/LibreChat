@@ -12,7 +12,7 @@ interface SpinnerProps {
 export default function Spinner({
   className = 'm-auto',
   size = 20,
-  color = 'currentColor',
+  color = 'var(--brand-primary)',
   bgOpacity = 0.1,
   speed = 0.75,
 }: SpinnerProps): JSX.Element {

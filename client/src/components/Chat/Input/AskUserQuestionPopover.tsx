@@ -165,7 +165,7 @@ function AskUserQuestionPopoverPanel({
                   className={cn(
                     'flex h-5 w-5 shrink-0 items-center justify-center rounded text-xs',
                     isChecked
-                      ? 'bg-surface-submit text-white'
+                      ? 'bg-surface-submit text-brand-primary-foreground'
                       : 'bg-surface-tertiary text-text-secondary',
                   )}
                 >

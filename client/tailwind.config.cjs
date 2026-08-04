@@ -64,6 +64,11 @@ module.exports = {
         'shortcut-shake': 'shortcut-shake 0.25s ease-in-out',
       },
       colors: {
+        'brand-primary': 'var(--brand-primary)',
+        'brand-primary-hover': 'var(--brand-primary-hover)',
+        'brand-primary-foreground': 'var(--brand-primary-foreground)',
+        'brand-link': 'var(--brand-link)',
+        'brand-selected': 'var(--brand-selected)',
         gray: {
           20: '#ececf1',
           50: '#f7f7f8',

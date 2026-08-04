@@ -112,7 +112,7 @@ const NavIconButton = memo(function NavIconButton({
           data-testid={`nav-panel-${link.id}`}
           className={cn(
             'h-9 w-9 rounded-lg',
-            isActive ? 'bg-surface-active-alt text-text-primary' : 'text-text-secondary',
+            isActive ? 'bg-surface-active text-brand-link' : 'text-text-secondary',
           )}
           onClick={handleClick}
         >

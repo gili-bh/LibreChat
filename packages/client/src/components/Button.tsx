@@ -25,7 +25,8 @@ const buttonVariants: (
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+        default:
+          'bg-brand-primary text-brand-primary-foreground hover:bg-brand-primary-hover focus-visible:ring-ring-primary',
         destructive:
           'bg-surface-destructive text-destructive-foreground hover:bg-surface-destructive-hover',
         outline:
@@ -34,9 +35,9 @@ const buttonVariants: (
           'rounded-xl border border-border-light bg-transparent text-text-primary hover:bg-surface-secondary focus-visible:ring-ring-primary focus-visible:ring-offset-0',
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         ghost: 'hover:bg-surface-hover hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
-        // hardcoded text color because of WCAG contrast issues (text-white)
-        submit: 'bg-surface-submit text-white hover:bg-surface-submit-hover',
+        link: 'text-brand-link underline-offset-4 hover:underline',
+        submit:
+          'bg-surface-submit text-brand-primary-foreground hover:bg-surface-submit-hover focus-visible:ring-ring-primary',
       },
       size: {
         default: 'h-10 px-4 py-2',
