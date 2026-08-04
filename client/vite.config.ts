@@ -88,6 +88,17 @@ export default defineConfig(({ command }) => ({
         });
       },
     },
+    {
+      name: 'copy-branding-assets',
+      apply: 'build',
+      writeBundle() {
+        fs.cpSync(
+          path.resolve(__dirname, 'public/assets/branding'),
+          path.resolve(__dirname, 'dist/assets/branding'),
+          { recursive: true },
+        );
+      },
+    },
     VitePWA({
       injectRegister: 'auto', // 'auto' | 'manual' | 'disabled'
       registerType: 'autoUpdate', // 'prompt' | 'autoUpdate'
@@ -99,10 +110,10 @@ export default defineConfig(({ command }) => ({
       workbox: {
         globPatterns: [
           '**/*.{js,css,html}',
-          'assets/favicon*.png',
-          'assets/icon-*.png',
-          'assets/apple-touch-icon*.png',
-          'assets/maskable-icon.png',
+          'assets/branding/favicon*.png',
+          'assets/branding/icon-*.png',
+          'assets/branding/apple-touch-icon*.png',
+          'assets/branding/maskable-icon.png',
           'manifest.webmanifest',
         ],
         globIgnores: [
@@ -140,34 +151,34 @@ export default defineConfig(({ command }) => ({
       },
       includeAssets: [],
       manifest: {
-        name: 'LibreChat',
-        short_name: 'LibreChat',
+        name: 'העוזר הארגוני של אהוד לויתן',
+        short_name: 'העוזר הארגוני',
         display: 'standalone',
         background_color: '#000000',
         theme_color: '#009688',
         icons: [
           {
-            src: 'assets/favicon-32x32.png',
+            src: 'assets/branding/favicon-32x32.png',
             sizes: '32x32',
             type: 'image/png',
           },
           {
-            src: 'assets/favicon-16x16.png',
+            src: 'assets/branding/favicon-16x16.png',
             sizes: '16x16',
             type: 'image/png',
           },
           {
-            src: 'assets/apple-touch-icon-180x180.png',
+            src: 'assets/branding/apple-touch-icon-180x180.png',
             sizes: '180x180',
             type: 'image/png',
           },
           {
-            src: 'assets/icon-192x192.png',
+            src: 'assets/branding/icon-192x192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: 'assets/maskable-icon.png',
+            src: 'assets/branding/maskable-icon.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'maskable',
