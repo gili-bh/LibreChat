@@ -4,6 +4,8 @@ import { useAgentsMapContext, useAssistantsMapContext } from '~/Providers';
 import EndpointIcon from '~/components/Endpoints/EndpointIcon';
 import { areConversationIconFieldsEqual } from './utils';
 import { useGetEndpointsQuery } from '~/data-provider';
+import { useAdminInterface } from '~/hooks';
+import { cn } from '~/utils';
 
 const emptyEndpointsConfig = {} as TEndpointsConfig;
 
@@ -22,9 +24,22 @@ function ConversationEndpointIcon({
   context = 'menu-item',
   size = 20,
 }: ConversationEndpointIconProps) {
+  const showAdvancedInterface = useAdminInterface();
   const { data: endpointsConfig = emptyEndpointsConfig } = useGetEndpointsQuery();
   const agentsMap = useAgentsMapContext();
   const assistantMap = useAssistantsMapContext();
+
+  if (!showAdvancedInterface) {
+    return (
+      <img
+        src="assets/branding/icon-192x192.png"
+        alt=""
+        aria-hidden="true"
+        className={cn('shrink-0 rounded-full object-contain', className)}
+        style={{ width: size, height: size }}
+      />
+    );
+  }
 
   return (
     <EndpointIcon

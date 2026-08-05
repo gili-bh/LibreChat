@@ -7,7 +7,7 @@ import AuthorHeader from '~/components/Chat/Messages/Content/Parts/AuthorHeader'
 import MinimalHoverButtons from '~/components/Chat/Messages/MinimalHoverButtons';
 import MessageTimestamp from '~/components/Chat/Messages/ui/MessageTimestamp';
 import Icon from '~/components/Chat/Messages/MessageIcon';
-import { useAuthContext, useLocalize } from '~/hooks';
+import { useAdminInterface, useAuthContext, useLocalize } from '~/hooks';
 import SearchContent from './Content/SearchContent';
 import { fontSizeAtom } from '~/store/fontSize';
 import SearchButtons from './SearchButtons';
@@ -98,6 +98,7 @@ function SearchMessage({ message }: Pick<TMessageProps, 'message'>) {
   const UsernameDisplay = useRecoilValue<boolean>(store.UsernameDisplay);
   const { user } = useAuthContext();
   const localize = useLocalize();
+  const showAdvancedInterface = useAdminInterface();
 
   const iconData: TMessageIcon = useMemo(
     () => ({
@@ -115,10 +116,14 @@ function SearchMessage({ message }: Pick<TMessageProps, 'message'>) {
         ? (user?.name ?? '') || (user?.username ?? '')
         : localize('com_user_message');
     }
+    if (!showAdvancedInterface) {
+      return localize('com_ui_assistant');
+    }
     return message?.sender ?? '';
   }, [
     message?.isCreatedByUser,
     message?.sender,
+    showAdvancedInterface,
     UsernameDisplay,
     user?.name,
     user?.username,

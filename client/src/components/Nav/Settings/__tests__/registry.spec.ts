@@ -15,6 +15,7 @@ const settingsContext: SettingsContextValue = {
   hasUserProvidedEndpoints: false,
   hasMultiConvo: false,
   hasPrompts: false,
+  isAdmin: false,
   isLocalProvider: true,
   twoFactorEnabled: false,
   allowAccountDeletion: true,
@@ -63,6 +64,7 @@ describe('settings registry', () => {
       expect(
         langfuseEntry?.show?.({
           ...settingsContext,
+          isAdmin: true,
           langfuseConnectionAccess: true,
         }),
       ).toBe(true);
@@ -72,6 +74,7 @@ describe('settings registry', () => {
       expect(
         langfuseEntry?.show?.({
           ...settingsContext,
+          isAdmin: true,
           langfuseConnectionAccess: false,
         }),
       ).toBe(false);
@@ -81,6 +84,7 @@ describe('settings registry', () => {
       expect(
         langfuseEntry?.show?.({
           ...settingsContext,
+          isAdmin: true,
           langfuseConnectionAccess: true,
         }),
       ).toBe(true);

@@ -3,7 +3,13 @@ import { useMediaQuery } from '@librechat/client';
 import { PermissionTypes, Permissions } from 'librechat-data-provider';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import type t from 'librechat-data-provider';
-import { useDocumentTitle, useHasAccess, useLocalize, TranslationKeys } from '~/hooks';
+import {
+  useAdminInterface,
+  useDocumentTitle,
+  useHasAccess,
+  useLocalize,
+  TranslationKeys,
+} from '~/hooks';
 import { useGetEndpointsQuery, useGetAgentCategoriesQuery } from '~/data-provider';
 import MarketplaceAdminSettings from './MarketplaceAdminSettings';
 import OpenSidebar from '~/components/Chat/Menus/OpenSidebar';
@@ -26,6 +32,7 @@ interface AgentMarketplaceProps {
  */
 const AgentMarketplace: React.FC<AgentMarketplaceProps> = ({ className = '' }) => {
   const localize = useLocalize();
+  const showAdvancedInterface = useAdminInterface();
   const navigate = useNavigate();
   const { category } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -178,9 +185,10 @@ const AgentMarketplace: React.FC<AgentMarketplaceProps> = ({ className = '' }) =
     permissionType: PermissionTypes.MARKETPLACE,
     permission: Permissions.USE,
   });
+  const canUseMarketplace = showAdvancedInterface && hasAccessToMarketplace;
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
-    if (!hasAccessToMarketplace) {
+    if (!canUseMarketplace) {
       timeoutId = setTimeout(() => {
         navigate('/c/new');
       }, 1000);
@@ -188,9 +196,9 @@ const AgentMarketplace: React.FC<AgentMarketplaceProps> = ({ className = '' }) =
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [hasAccessToMarketplace, navigate]);
+  }, [canUseMarketplace, navigate]);
 
-  if (!hasAccessToMarketplace) {
+  if (!canUseMarketplace) {
     return null;
   }
   return (

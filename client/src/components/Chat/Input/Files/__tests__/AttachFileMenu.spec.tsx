@@ -5,11 +5,14 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { EModelEndpoint, EToolResources, Providers } from 'librechat-data-provider';
 import AttachFileMenu from '../AttachFileMenu';
 
+let mockShowAdvancedInterface = true;
+
 jest.mock('~/hooks', () => ({
   useAgentToolPermissions: jest.fn(),
   useAgentCapabilities: jest.fn(),
   useGetAgentsConfig: jest.fn(),
   useFileHandlingNoChatContext: jest.fn(),
+  useAdminInterface: () => mockShowAdvancedInterface,
   useLocalize: jest.fn(),
 }));
 
@@ -96,6 +99,7 @@ const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false 
 function setupMocks(overrides: { provider?: string } = {}) {
   const translations: Record<string, string> = {
     com_files_upload_sharepoint: 'Upload from SharePoint',
+    com_files_upload_local_machine: 'From Local Computer',
     com_sidepanel_attach_files: 'Attach Files',
     com_ui_upload_code_environment: 'Upload to Code Environment',
     com_ui_upload_file_search: 'Upload for File Search',
@@ -149,7 +153,10 @@ function openMenu() {
 }
 
 describe('AttachFileMenu', () => {
-  beforeEach(jest.clearAllMocks);
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockShowAdvancedInterface = true;
+  });
 
   describe('Upload to Provider vs Upload Image', () => {
     it('shows "Upload to Provider" when endpointType is custom (resolved from agent provider)', () => {
@@ -321,6 +328,26 @@ describe('AttachFileMenu', () => {
       renderMenu({ endpointType: EModelEndpoint.openAI });
       openMenu();
       expect(screen.getByText('Upload to Code Environment')).toBeInTheDocument();
+    });
+
+    it('hides Code Files from standard users', () => {
+      setupMocks();
+      mockShowAdvancedInterface = false;
+      mockUseAgentCapabilities.mockReturnValue({
+        contextEnabled: false,
+        fileSearchEnabled: false,
+        codeEnabled: true,
+      });
+      mockUseAgentToolPermissions.mockReturnValue({
+        fileSearchAllowedByAgent: false,
+        codeAllowedByAgent: true,
+        provider: undefined,
+      });
+      renderMenu({ endpointType: EModelEndpoint.openAI });
+      openMenu();
+
+      expect(screen.queryByText('Upload to Code Environment')).not.toBeInTheDocument();
+      expect(screen.getByText('From Local Computer')).toBeInTheDocument();
     });
 
     it('shows all options when all capabilities are enabled', () => {

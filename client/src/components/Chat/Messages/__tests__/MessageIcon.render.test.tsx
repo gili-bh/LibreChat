@@ -14,6 +14,10 @@ jest.mock('~/data-provider', () => ({
 jest.mock('~/utils', () => ({
   getIconEndpoint: jest.fn(() => 'agents'),
 }));
+let mockShowAdvancedInterface = true;
+jest.mock('~/hooks', () => ({
+  useAdminInterface: () => mockShowAdvancedInterface,
+}));
 
 const iconRenderCount = { current: 0 };
 
@@ -55,6 +59,19 @@ const baseIconData: TMessageIcon = {
 describe('MessageIcon render cycles', () => {
   beforeEach(() => {
     iconRenderCount.current = 0;
+    mockShowAdvancedInterface = true;
+  });
+
+  it('uses the company icon for standard users', () => {
+    mockShowAdvancedInterface = false;
+
+    const { container } = render(<MessageIcon iconData={baseIconData} agent={makeAgent()} />);
+
+    expect(container.querySelector('img')).toHaveAttribute(
+      'src',
+      'assets/branding/icon-192x192.png',
+    );
+    expect(screen.queryByTestId('icon')).not.toBeInTheDocument();
   });
 
   it('renders once on initial mount', () => {

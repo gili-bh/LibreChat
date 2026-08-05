@@ -6,7 +6,7 @@ import { TooltipAnchor } from '@librechat/client';
 import MCPServerMenuItem from '~/components/MCP/MCPServerMenuItem';
 import MCPConfigDialog from '~/components/MCP/MCPConfigDialog';
 import StackedMCPIcons from '~/components/MCP/StackedMCPIcons';
-import { useHasAccess, useLocalize } from '~/hooks';
+import { useAdminInterface, useHasAccess, useLocalize } from '~/hooks';
 import { useBadgeRowContext } from '~/Providers';
 import { cn } from '~/utils';
 
@@ -135,13 +135,19 @@ function MCPSelectContent() {
 
 function MCPSelect() {
   const context = useBadgeRowContext();
+  const showAdvancedInterface = useAdminInterface();
   const { selectableServers } = context?.mcpServerManager ?? {};
   const canUseMcp = useHasAccess({
     permissionType: PermissionTypes.MCP_SERVERS,
     permission: Permissions.USE,
   });
 
-  if (!canUseMcp || !selectableServers || selectableServers.length === 0) {
+  if (
+    !showAdvancedInterface ||
+    !canUseMcp ||
+    !selectableServers ||
+    selectableServers.length === 0
+  ) {
     return null;
   }
 

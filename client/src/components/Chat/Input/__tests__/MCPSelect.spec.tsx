@@ -22,6 +22,7 @@ const defaultMcpServerManager = {
 };
 
 let mockCanUseMcp = true;
+let mockShowAdvancedInterface = true;
 let mockMcpServerManager = { ...defaultMcpServerManager };
 
 jest.mock('~/Providers', () => ({
@@ -35,6 +36,7 @@ jest.mock('~/Providers', () => ({
 jest.mock('~/hooks', () => ({
   useLocalize: () => (key: string) => key,
   useHasAccess: () => mockCanUseMcp,
+  useAdminInterface: () => mockShowAdvancedInterface,
 }));
 
 jest.mock('@librechat/client', () => {
@@ -62,6 +64,7 @@ describe('MCPSelect', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockCanUseMcp = true;
+    mockShowAdvancedInterface = true;
     mockMcpServerManager = { ...defaultMcpServerManager };
   });
 
@@ -126,6 +129,12 @@ describe('MCPSelect', () => {
     const { container } = render(<MCPSelect />);
     expect(container.firstChild).toBeNull();
     expect(screen.queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  it('renders nothing for standard users', () => {
+    mockShowAdvancedInterface = false;
+    const { container } = render(<MCPSelect />);
+    expect(container.firstChild).toBeNull();
   });
 
   it('renders nothing when selectableServers is empty', () => {

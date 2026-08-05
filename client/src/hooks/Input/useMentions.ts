@@ -20,6 +20,7 @@ import {
 } from '~/data-provider';
 import useAssistantListMap from '~/hooks/Assistants/useAssistantListMap';
 import { useAgentsMapContext } from '~/Providers/AgentsMapContext';
+import useAdminInterface from '~/hooks/useAdminInterface';
 import { mapEndpoints, getPresetTitle } from '~/utils';
 import { EndpointIcon } from '~/components/Endpoints';
 import useHasAccess from '~/hooks/Roles/useHasAccess';
@@ -59,6 +60,7 @@ export default function useMentions({
   assistantMap: TAssistantsMap;
   includeAssistants: boolean;
 }) {
+  const showAdvancedInterface = useAdminInterface();
   const hasAgentAccess = useHasAccess({
     permissionType: PermissionTypes.AGENTS,
     permission: Permissions.USE,
@@ -99,6 +101,7 @@ export default function useMentions({
   );
   const validEndpointSet = useMemo(() => new Set(validEndpoints), [validEndpoints]);
   const agentQueryEnabled =
+    showAdvancedInterface &&
     hasAgentAccess &&
     interfaceConfig.modelSelect === true &&
     (includedEndpoints.size === 0 || includedEndpoints.has(EModelEndpoint.agents));
@@ -171,6 +174,10 @@ export default function useMentions({
   }, [startupConfig, agentsMap]);
 
   const options: MentionOption[] = useMemo(() => {
+    if (!showAdvancedInterface) {
+      return [];
+    }
+
     const modelOptions = validEndpoints.flatMap((endpoint) => {
       if (isAssistantsEndpoint(endpoint) || isAgentsEndpoint(endpoint)) {
         return [];
@@ -270,6 +277,7 @@ export default function useMentions({
     includeAssistants,
     interfaceConfig.presets,
     interfaceConfig.modelSelect,
+    showAdvancedInterface,
   ]);
 
   const isLoading =

@@ -14,6 +14,7 @@ import {
   useLocalize,
   useHasAccess,
   useAuthContext,
+  useAdminInterface,
   useHasMemoryAccess,
   useAgentCapabilities,
 } from '~/hooks';
@@ -30,6 +31,7 @@ interface ToolsDropdownProps {
 const ToolsDropdown = ({ disabled }: ToolsDropdownProps) => {
   const localize = useLocalize();
   const { user } = useAuthContext();
+  const showAdvancedInterface = useAdminInterface();
   const context = useBadgeRowContext();
   const { data: startupConfig } = useGetStartupConfig();
 
@@ -308,7 +310,7 @@ const ToolsDropdown = ({ disabled }: ToolsDropdownProps) => {
     });
   }
 
-  if (canRunCode && codeEnabled) {
+  if (showAdvancedInterface && canRunCode && codeEnabled) {
     dropdownItems.push({
       onClick: handleCodeInterpreterToggle,
       hideOnClick: false,
@@ -360,7 +362,7 @@ const ToolsDropdown = ({ disabled }: ToolsDropdownProps) => {
   }
 
   const { availableMCPServers } = mcpServerManager ?? {};
-  if (canUseMcp && availableMCPServers && availableMCPServers.length > 0) {
+  if (showAdvancedInterface && canUseMcp && availableMCPServers && availableMCPServers.length > 0) {
     dropdownItems.push({
       hideOnClick: false,
       render: (props) => <MCPSubMenu {...props} placeholder={mcpPlaceholder} />,

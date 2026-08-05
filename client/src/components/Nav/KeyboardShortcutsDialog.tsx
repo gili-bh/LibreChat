@@ -9,13 +9,20 @@ import { RecorderInfo, RecorderPill, useShortcutRecorder } from './ShortcutRecor
 import { isMac, useShortcutBindings } from '~/hooks/useKeyboardShortcuts';
 import { bindingDisplayKeys } from '~/utils/shortcuts';
 import ShortcutKeyCombo from './ShortcutKeyCombo';
-import { useLocalize } from '~/hooks';
+import { useAdminInterface, useLocalize } from '~/hooks';
 import { cn } from '~/utils';
 import store from '~/store';
 
 type GroupedBindings = Record<string, ShortcutBindingInfo[]>;
 
 const PANELS_GROUP = 'com_shortcut_group_panels';
+const ADVANCED_SHORTCUTS = new Set<ShortcutActionId>([
+  'openModelSelector',
+  'openAssistants',
+  'openAgents',
+  'openParameters',
+  'openMCP',
+]);
 
 function EditingRow({
   info,
@@ -264,13 +271,22 @@ function PanelsSection({
 
 function KeyboardShortcutsDialog() {
   const localize = useLocalize();
+  const showAdvancedInterface = useAdminInterface();
   const { bindings, bindingMap, setBinding, resetBinding, resetAll } = useShortcutBindings();
   const [open, setOpen] = useRecoilState(store.showShortcutsDialog);
   const [editingId, setEditingId] = useState<ShortcutActionId | null>(null);
 
+  const visibleBindings = useMemo(
+    () =>
+      showAdvancedInterface
+        ? bindings
+        : bindings.filter((binding) => !ADVANCED_SHORTCUTS.has(binding.id)),
+    [bindings, showAdvancedInterface],
+  );
+
   const grouped = useMemo<GroupedBindings>(() => {
     const groups: GroupedBindings = {};
-    for (const info of bindings) {
+    for (const info of visibleBindings) {
       const group = info.groupKey;
       if (!groups[group]) {
         groups[group] = [];
@@ -278,7 +294,7 @@ function KeyboardShortcutsDialog() {
       groups[group].push(info);
     }
     return groups;
-  }, [bindings]);
+  }, [visibleBindings]);
 
   const groupEntries = useMemo(() => Object.entries(grouped), [grouped]);
 
@@ -294,11 +310,11 @@ function KeyboardShortcutsDialog() {
 
   const labelMap = useMemo<Map<string, string>>(() => {
     const map = new Map<string, string>();
-    for (const info of bindings) {
+    for (const info of visibleBindings) {
       map.set(info.id, localize(info.labelKey as TranslationKeys));
     }
     return map;
-  }, [bindings, localize]);
+  }, [visibleBindings, localize]);
 
   const getActionLabel = useCallback((id: string) => labelMap.get(id) ?? id, [labelMap]);
 
@@ -309,7 +325,10 @@ function KeyboardShortcutsDialog() {
     setEditingId(null);
   }, []);
 
-  const hasAnyCustom = useMemo(() => bindings.some((b) => b.isCustom), [bindings]);
+  const hasAnyCustom = useMemo(
+    () => visibleBindings.some((binding) => binding.isCustom),
+    [visibleBindings],
+  );
 
   return (
     <OGDialog

@@ -23,6 +23,7 @@ import {
   useAgentCapabilities,
   useMCPServerManager,
   useGetAgentsConfig,
+  useAdminInterface,
   useHasAccess,
 } from '~/hooks';
 import MCPBuilderPanel from '~/components/SidePanel/MCPBuilder/MCPBuilderPanel';
@@ -52,6 +53,7 @@ export default function useSideNavLinks({
   endpointsConfig: TEndpointsConfig;
   includeHidePanel?: boolean;
 }) {
+  const showAdvancedInterface = useAdminInterface();
   const hasAccessToPrompts = useHasAccess({
     permissionType: PermissionTypes.PROMPTS,
     permission: Permissions.USE,
@@ -97,6 +99,7 @@ export default function useSideNavLinks({
     const links: NavLink[] = [];
 
     if (
+      showAdvancedInterface &&
       endpointsConfig?.[EModelEndpoint.agents] &&
       hasAccessToAgents &&
       hasAccessToCreateAgents &&
@@ -112,6 +115,7 @@ export default function useSideNavLinks({
     }
 
     if (
+      showAdvancedInterface &&
       isAssistantsEndpoint(endpoint) &&
       ((endpoint === EModelEndpoint.assistants &&
         endpointsConfig?.[EModelEndpoint.assistants] &&
@@ -179,6 +183,7 @@ export default function useSideNavLinks({
     });
 
     if (
+      showAdvancedInterface &&
       interfaceConfig.parameters === true &&
       isParamEndpoint(endpoint ?? '', endpointType ?? '') === true &&
       !isAgentsEndpoint(endpoint) &&
@@ -194,8 +199,9 @@ export default function useSideNavLinks({
     }
 
     if (
-      (hasAccessToUseMCPSettings && availableMCPServers && availableMCPServers.length > 0) ||
-      hasAccessToCreateMCP
+      showAdvancedInterface &&
+      ((hasAccessToUseMCPSettings && availableMCPServers && availableMCPServers.length > 0) ||
+        hasAccessToCreateMCP)
     ) {
       links.push({
         title: 'com_nav_setting_mcp',
@@ -219,6 +225,7 @@ export default function useSideNavLinks({
     return links;
   }, [
     endpoint,
+    showAdvancedInterface,
     endpointsConfig,
     keyProvided,
     hasAccessToAgents,

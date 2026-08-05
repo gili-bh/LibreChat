@@ -11,7 +11,7 @@ import {
 } from '~/utils';
 import MessageContent from '~/components/Chat/Messages/Content/MessageContent';
 import MessageTimestamp from '~/components/Chat/Messages/ui/MessageTimestamp';
-import { useLocalize, useMessageActions, useContentMetadata } from '~/hooks';
+import { useAdminInterface, useLocalize, useMessageActions, useContentMetadata } from '~/hooks';
 import PlaceholderRow from '~/components/Chat/Messages/ui/PlaceholderRow';
 import SiblingSwitch from '~/components/Chat/Messages/SiblingSwitch';
 import HoverButtons from '~/components/Chat/Messages/HoverButtons';
@@ -78,6 +78,7 @@ const MessageRender = memo(function MessageRender({
   chatContext,
 }: MessageRenderProps) {
   const localize = useLocalize();
+  const showAdvancedInterface = useAdminInterface();
   const {
     ask,
     edit,
@@ -99,6 +100,10 @@ const MessageRender = memo(function MessageRender({
     setCurrentEditId,
     chatContext,
   });
+  const visibleMessageLabel =
+    !showAdvancedInterface && msg?.isCreatedByUser !== true
+      ? localize('com_ui_assistant')
+      : messageLabel;
   const fontSize = useAtomValue(fontSizeAtom);
   const maximizeChatSpace = useRecoilValue(store.maximizeChatSpace);
 
@@ -115,11 +120,11 @@ const MessageRender = memo(function MessageRender({
       endpoint: msg?.endpoint ?? conversation?.endpoint,
       model: msg?.model ?? conversation?.model,
       iconURL: msg?.iconURL,
-      modelLabel: messageLabel,
+      modelLabel: visibleMessageLabel,
       isCreatedByUser: msg?.isCreatedByUser,
     }),
     [
-      messageLabel,
+      visibleMessageLabel,
       conversation?.endpoint,
       conversation?.model,
       msg?.model,
@@ -194,7 +199,7 @@ const MessageRender = memo(function MessageRender({
         {!hasParallelContent && (
           <h2 className={cn('select-none font-semibold', fontSize)}>
             <span className="sr-only">{getHeaderPrefixForScreenReader(msg, localize)}</span>
-            {messageLabel}
+            {visibleMessageLabel}
             <MessageTimestamp value={msg.createdAt ?? msg.clientTimestamp} />
           </h2>
         )}

@@ -303,6 +303,7 @@ export const registry: SettingEntry[] = [
     tab: CHAT,
     section: 'conversations',
     labelKey: 'com_nav_modular_chat',
+    show: (ctx) => ctx.isAdmin,
     Component: toggleControl({
       stateAtom: store.modularChat,
       localizationKey: 'com_nav_modular_chat',
@@ -487,6 +488,7 @@ export const registry: SettingEntry[] = [
     tab: DATA,
     section: 'data',
     labelKey: 'com_ui_settings_label_shared_links',
+    show: (ctx) => ctx.isAdmin,
     Component: SharedLinks,
   },
   // Data controls · API keys
@@ -496,7 +498,7 @@ export const registry: SettingEntry[] = [
     section: 'apiKeys',
     labelKey: 'com_ui_settings_label_provider_api_keys',
     keywords: ['api', 'key', 'keys', 'provider', 'endpoint', 'credentials'],
-    show: (ctx) => ctx.hasUserProvidedEndpoints,
+    show: (ctx) => ctx.isAdmin && ctx.hasUserProvidedEndpoints,
     Component: ProviderKeys,
   },
   {
@@ -504,7 +506,7 @@ export const registry: SettingEntry[] = [
     tab: DATA,
     section: 'apiKeys',
     labelKey: 'com_ui_settings_label_agent_api_keys',
-    show: (ctx) => ctx.hasRemoteAgents,
+    show: (ctx) => ctx.isAdmin && ctx.hasRemoteAgents,
     Component: ApiKeys,
   },
   {
@@ -512,6 +514,7 @@ export const registry: SettingEntry[] = [
     tab: DATA,
     section: 'apiKeys',
     labelKey: 'com_ui_settings_label_revoke_keys',
+    show: (ctx) => ctx.isAdmin,
     Component: RevokeKeys,
   },
   // Langfuse
@@ -521,7 +524,7 @@ export const registry: SettingEntry[] = [
     section: 'langfuse',
     labelKey: 'com_ui_langfuse_title',
     keywords: ['langfuse', 'observability', 'tracing', 'telemetry', 'traces'],
-    show: (ctx) => ctx.langfuseConnectionAccess,
+    show: (ctx) => ctx.isAdmin && ctx.langfuseConnectionAccess,
     Component: LangfuseConnection,
   },
   // Data controls · Danger zone

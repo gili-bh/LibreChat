@@ -7,7 +7,7 @@ import { DropdownPopup, TooltipAnchor, useMediaQuery } from '@librechat/client';
 import type * as t from '~/common';
 import ExportModal from '~/components/Nav/ExportConversation/ExportModal';
 import { ShareButton } from '~/components/Conversations/ConvoOptions';
-import { useHasAccess, useLocalize } from '~/hooks';
+import { useAdminInterface, useHasAccess, useLocalize } from '~/hooks';
 import store from '~/store';
 
 export default function ExportAndShareMenu({
@@ -16,6 +16,7 @@ export default function ExportAndShareMenu({
   isSharedButtonEnabled: boolean;
 }) {
   const localize = useLocalize();
+  const showAdvancedInterface = useAdminInterface();
   const [showExports, setShowExports] = useState(false);
   const [isPopoverActive, setIsPopoverActive] = useState(false);
   const [showShareDialog, setShowShareDialog] = useState(false);
@@ -53,7 +54,7 @@ export default function ExportAndShareMenu({
       label: localize('com_ui_share'),
       onClick: shareHandler,
       icon: <Share2 className="icon-md mr-2 text-text-secondary" />,
-      show: isSharedButtonEnabled && canCreateSharedLinks,
+      show: showAdvancedInterface && isSharedButtonEnabled && canCreateSharedLinks,
       /** NOTE: THE FOLLOWING PROPS ARE REQUIRED FOR MENU ITEMS THAT OPEN DIALOGS */
       hideOnClick: false,
       ref: shareButtonRef,
@@ -81,18 +82,30 @@ export default function ExportAndShareMenu({
         setIsOpen={setIsPopoverActive}
         trigger={
           <TooltipAnchor
-            description={localize('com_endpoint_export_share')}
+            description={localize(
+              showAdvancedInterface ? 'com_endpoint_export_share' : 'com_endpoint_export',
+            )}
             render={
               <Ariakit.MenuButton
                 id="export-menu-button"
-                aria-label="Export options"
+                aria-label={localize(
+                  showAdvancedInterface ? 'com_endpoint_export_share' : 'com_endpoint_export',
+                )}
                 className="inline-flex size-9 flex-shrink-0 items-center justify-center rounded-xl border border-border-light bg-presentation text-text-primary transition-all ease-in-out hover:bg-surface-tertiary disabled:pointer-events-none disabled:opacity-50 radix-state-open:bg-surface-tertiary"
               >
-                <Share2
-                  className="icon-md text-text-primary"
-                  aria-hidden="true"
-                  focusable="false"
-                />
+                {showAdvancedInterface ? (
+                  <Share2
+                    className="icon-md text-text-primary"
+                    aria-hidden="true"
+                    focusable="false"
+                  />
+                ) : (
+                  <Upload
+                    className="icon-md text-text-primary"
+                    aria-hidden="true"
+                    focusable="false"
+                  />
+                )}
               </Ariakit.MenuButton>
             }
           />
@@ -107,12 +120,14 @@ export default function ExportAndShareMenu({
         triggerRef={exportButtonRef}
         aria-label={localize('com_ui_export_convo_modal')}
       />
-      <ShareButton
-        triggerRef={shareButtonRef}
-        conversationId={conversation.conversationId ?? ''}
-        open={showShareDialog}
-        onOpenChange={setShowShareDialog}
-      />
+      {showAdvancedInterface && (
+        <ShareButton
+          triggerRef={shareButtonRef}
+          conversationId={conversation.conversationId ?? ''}
+          open={showShareDialog}
+          onOpenChange={setShowShareDialog}
+        />
+      )}
     </>
   );
 }

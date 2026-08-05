@@ -12,6 +12,7 @@ import {
   TranslationKeys,
   useFavorites,
   useShowMarketplace,
+  useAdminInterface,
   useNewConvo,
   useElementSize,
 } from '~/hooks';
@@ -192,6 +193,7 @@ const Conversations: FC<ConversationsProps> = ({
   showFavorites = true,
 }) => {
   const localize = useLocalize();
+  const showAdvancedInterface = useAdminInterface();
   const search = useRecoilValue(store.search);
   const { favorites, isLoading: isFavoritesLoading } = useFavorites();
   const isSmallScreen = useMediaQuery('(max-width: 768px)');
@@ -214,6 +216,7 @@ const Conversations: FC<ConversationsProps> = ({
 
   // Determine if FavoritesList will render content
   const shouldShowFavorites =
+    showAdvancedInterface &&
     showFavorites &&
     !search.query &&
     (isFavoritesLoading || favorites.length > 0 || showAgentMarketplace);

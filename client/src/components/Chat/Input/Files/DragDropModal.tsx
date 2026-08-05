@@ -19,6 +19,7 @@ import {
   useLocalize,
   useUploadOptions,
   useFileUploadRouter,
+  useAdminInterface,
   useAgentToolPermissions,
 } from '~/hooks';
 import { useDragDropContext, useUploadModalContext } from '~/Providers';
@@ -26,6 +27,7 @@ import { ephemeralAgentByConvoId } from '~/store';
 
 const DragDropModal = () => {
   const localize = useLocalize();
+  const showAdvancedInterface = useAdminInterface();
   const { isVisible, files, closeModal } = useUploadModalContext();
   const { conversationId, agentId, endpoint, endpointType, useResponsesApi } = useDragDropContext();
   const ephemeralAgent = useRecoilValue(
@@ -71,7 +73,9 @@ const DragDropModal = () => {
       default:
         return isProviderDocSupported
           ? {
-              label: localize('com_ui_upload_provider'),
+              label: localize(
+                showAdvancedInterface ? 'com_ui_upload_provider' : 'com_files_upload_local_machine',
+              ),
               icon: <FileImageIcon className="icon-md" />,
             }
           : {
@@ -81,7 +85,13 @@ const DragDropModal = () => {
     }
   };
 
-  const options = useMemo(() => getOptions(files), [getOptions, files]);
+  const options = useMemo(
+    () =>
+      getOptions(files).filter(
+        (value) => showAdvancedInterface || value !== EToolResources.execute_code,
+      ),
+    [files, getOptions, showAdvancedInterface],
+  );
 
   if (!isVisible) {
     return null;

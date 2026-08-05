@@ -5,7 +5,7 @@ import { Root, Anchor } from '@radix-ui/react-popover';
 import { isParamEndpoint, getEndpointField, tConvoUpdateSchema } from 'librechat-data-provider';
 import type { TPreset, TInterfaceConfig } from 'librechat-data-provider';
 import { EndpointSettings, SaveAsPresetDialog, AlternativeSettings } from '~/components/Endpoints';
-import { useSetIndexOptions, useLocalize } from '~/hooks';
+import { useAdminInterface, useSetIndexOptions, useLocalize } from '~/hooks';
 import { useGetEndpointsQuery } from '~/data-provider';
 import OptionsPopover from './OptionsPopover';
 import PopoverButtons from './PopoverButtons';
@@ -20,6 +20,7 @@ export default function HeaderOptions({
 
   const [saveAsDialogShow, setSaveAsDialogShow] = useState<boolean>(false);
   const localize = useLocalize();
+  const showAdvancedInterface = useAdminInterface();
 
   const { showPopover, conversation, setShowPopover } = useChatContext();
   const { setOption } = useSetIndexOptions();
@@ -29,7 +30,7 @@ export default function HeaderOptions({
     setSaveAsDialogShow(true);
   };
 
-  if (!endpoint) {
+  if (!endpoint || !showAdvancedInterface) {
     return null;
   }
 

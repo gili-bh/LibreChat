@@ -25,7 +25,13 @@ import {
   useArchiveConvoMutation,
   usePinConversationMutation,
 } from '~/data-provider';
-import { useHasAccess, useLocalize, useNavigateToConvo, useNewConvo } from '~/hooks';
+import {
+  useAdminInterface,
+  useHasAccess,
+  useLocalize,
+  useNavigateToConvo,
+  useNewConvo,
+} from '~/hooks';
 import { NotificationSeverity } from '~/common';
 import { useChatContext } from '~/Providers';
 import ProjectButton from './ProjectButton';
@@ -57,6 +63,7 @@ function ConvoOptions({
   isShiftHeld?: boolean;
 }) {
   const localize = useLocalize();
+  const showAdvancedInterface = useAdminInterface();
   const queryClient = useQueryClient();
   const { index } = useChatContext();
   const { data: startupConfig } = useGetStartupConfig();
@@ -267,7 +274,11 @@ function ConvoOptions({
         label: localize('com_ui_share'),
         onClick: shareHandler,
         icon: <Share2 className="icon-sm mr-2 text-text-primary" aria-hidden="true" />,
-        show: startupConfig && startupConfig.sharedLinksEnabled && canCreateSharedLinks,
+        show:
+          showAdvancedInterface &&
+          startupConfig &&
+          startupConfig.sharedLinksEnabled &&
+          canCreateSharedLinks,
         ariaHasPopup: 'dialog' as const,
         ariaControls: 'share-conversation-dialog',
         /** NOTE: THE FOLLOWING PROPS ARE REQUIRED FOR MENU ITEMS THAT OPEN DIALOGS */
@@ -356,6 +367,7 @@ function ConvoOptions({
       handlePinClick,
       handleArchiveClick,
       canCreateSharedLinks,
+      showAdvancedInterface,
       handleDuplicateClick,
       projectHandler,
       removeProjectHandler,
@@ -440,7 +452,7 @@ function ConvoOptions({
         }
         items={dropdownItems}
       />
-      {showShareDialog && (
+      {showAdvancedInterface && showShareDialog && (
         <ShareButton
           conversationId={conversationId ?? ''}
           open={showShareDialog}

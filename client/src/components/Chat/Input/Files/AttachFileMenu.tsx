@@ -36,6 +36,7 @@ import {
   useAgentCapabilities,
   useGetAgentsConfig,
   useFileHandlingNoChatContext,
+  useAdminInterface,
   useLocalize,
 } from '~/hooks';
 import { useSharePointFileHandlingNoChatContext } from '~/hooks/Files/useSharePointFileHandling';
@@ -97,6 +98,7 @@ const AttachFileMenu = ({
   conversation,
 }: AttachFileMenuProps) => {
   const localize = useLocalize();
+  const showAdvancedInterface = useAdminInterface();
   const isUploadDisabled = disabled ?? false;
   const inputRef = useRef<HTMLInputElement>(null);
   const [isPopoverActive, setIsPopoverActive] = useState(false);
@@ -195,7 +197,9 @@ const AttachFileMenu = ({
         isAzureWithResponsesApi
       ) {
         items.push({
-          label: localize('com_ui_upload_provider'),
+          label: localize(
+            showAdvancedInterface ? 'com_ui_upload_provider' : 'com_files_upload_local_machine',
+          ),
           onClick: () => {
             setToolResource(undefined);
             let fileType: Exclude<FileUploadType, 'image' | 'document'> = 'image_document';
@@ -248,7 +252,7 @@ const AttachFileMenu = ({
         });
       }
 
-      if (capabilities.codeEnabled && codeAllowedByAgent) {
+      if (showAdvancedInterface && capabilities.codeEnabled && codeAllowedByAgent) {
         items.push({
           label: localize('com_ui_upload_code_environment'),
           onClick: () => {
@@ -293,6 +297,7 @@ const AttachFileMenu = ({
     handleUploadClick,
     setEphemeralAgent,
     sharePointEnabled,
+    showAdvancedInterface,
     codeAllowedByAgent,
     fileSearchAllowedByAgent,
     setIsSharePointDialogOpen,

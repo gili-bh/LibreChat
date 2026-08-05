@@ -4,12 +4,13 @@ import { PermissionTypes, Permissions } from 'librechat-data-provider';
 import type { SettingsContextValue } from './types';
 import useProviderKeys from '../SettingsTabs/ProviderKeys/useProviderKeys';
 import usePersonalizationAccess from '~/hooks/usePersonalizationAccess';
-import { useHasAccess, useAuthContext } from '~/hooks';
+import { useAdminInterface, useHasAccess, useAuthContext } from '~/hooks';
 import { useGetStartupConfig } from '~/data-provider';
 import store from '~/store';
 
 export function useSettingsContext(): SettingsContextValue {
   const { user } = useAuthContext();
+  const isAdmin = useAdminInterface();
   const { data: startupConfig } = useGetStartupConfig();
   const { hasAnyPersonalizationFeature, hasMemoryOptOut } = usePersonalizationAccess();
 
@@ -47,6 +48,7 @@ export function useSettingsContext(): SettingsContextValue {
       hasUserProvidedEndpoints,
       hasMultiConvo: hasMultiConvoBool,
       hasPrompts: hasPromptsBool,
+      isAdmin,
       isLocalProvider,
       twoFactorEnabled,
       allowAccountDeletion,
@@ -62,6 +64,7 @@ export function useSettingsContext(): SettingsContextValue {
       hasUserProvidedEndpoints,
       hasMultiConvoBool,
       hasPromptsBool,
+      isAdmin,
       isLocalProvider,
       twoFactorEnabled,
       allowAccountDeletion,

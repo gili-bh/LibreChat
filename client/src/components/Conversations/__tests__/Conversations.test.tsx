@@ -67,11 +67,13 @@ const mockFavoritesState: { favorites: FavoriteEntry[]; isLoading: boolean } = {
 };
 
 let mockShowMarketplace = true;
+let mockShowAdvancedInterface = true;
 
 jest.mock('~/hooks', () => ({
   useFavorites: () => mockFavoritesState,
   useLocalize: () => (key: string) => key,
   useShowMarketplace: () => mockShowMarketplace,
+  useAdminInterface: () => mockShowAdvancedInterface,
   useNewConvo: () => ({ newConversation: jest.fn() }),
   useElementSize: () => ({ ref: jest.fn(), width: 300, height: 600 }),
   TranslationKeys: {},
@@ -116,6 +118,7 @@ describe('Conversations – favorites CellMeasurerCache key invalidation', () =>
     mockFavoritesState.favorites = [];
     mockFavoritesState.isLoading = false;
     mockShowMarketplace = true;
+    mockShowAdvancedInterface = true;
   });
 
   const Wrapper = () => (
@@ -190,6 +193,15 @@ describe('Conversations – favorites CellMeasurerCache key invalidation', () =>
 
     expect(cache.has(0, 0)).toBe(true);
     expect(cache.getHeight(0, 0)).toBe(88);
+  });
+
+  it('hides model favorites for standard users', () => {
+    mockFavoritesState.favorites = [{ model: 'gpt-4', endpoint: 'openAI' }];
+    mockShowAdvancedInterface = false;
+
+    const { queryByTestId } = render(<Wrapper />);
+
+    expect(queryByTestId('favorites-list')).not.toBeInTheDocument();
   });
 });
 

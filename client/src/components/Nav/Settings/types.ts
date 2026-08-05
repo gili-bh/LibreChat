@@ -43,6 +43,7 @@ export interface SettingsContextValue {
   hasUserProvidedEndpoints: boolean;
   hasMultiConvo: boolean;
   hasPrompts: boolean;
+  isAdmin: boolean;
   isLocalProvider: boolean;
   twoFactorEnabled: boolean;
   allowAccountDeletion: boolean;
@@ -130,7 +131,7 @@ export const TABS: TabMeta[] = [
         icon: createLangfuseIcon('h-3.5 w-3.5'),
       },
     ],
-    show: (ctx) => ctx.langfuseConnectionAccess,
+    show: (ctx) => ctx.isAdmin && ctx.langfuseConnectionAccess,
   },
   {
     id: SettingsTabValues.DATA,
@@ -159,6 +160,6 @@ export const TABS: TabMeta[] = [
     labelKey: 'com_nav_setting_about',
     icon: createElement(Info, { className: 'icon-sm', 'aria-hidden': true }),
     sections: [{ id: 'about', labelKey: 'com_nav_setting_about' }],
-    show: (ctx) => ctx.aboutEnabled,
+    show: (ctx) => ctx.isAdmin && ctx.aboutEnabled,
   },
 ];

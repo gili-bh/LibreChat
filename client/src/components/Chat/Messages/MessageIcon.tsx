@@ -4,6 +4,7 @@ import type { Assistant, Agent } from 'librechat-data-provider';
 import type { TMessageIcon } from '~/common';
 import ConvoIconURL from '~/components/Endpoints/ConvoIconURL';
 import { useGetEndpointsQuery } from '~/data-provider';
+import { useAdminInterface } from '~/hooks';
 import { getIconEndpoint } from '~/utils';
 import { isImageURL } from '~/utils/icons';
 import Icon from '~/components/Endpoints/Icon';
@@ -41,6 +42,7 @@ export function arePropsEqual(prev: MessageIconProps, next: MessageIconProps): b
 }
 
 const MessageIcon = memo(({ iconData, assistant, agent }: MessageIconProps) => {
+  const showAdvancedInterface = useAdminInterface();
   const { data: endpointsConfig } = useGetEndpointsQuery();
 
   const agentName = agent?.name ?? '';
@@ -64,6 +66,17 @@ const MessageIcon = memo(({ iconData, assistant, agent }: MessageIconProps) => {
     () => getEndpointField(endpointsConfig, endpoint, 'iconURL'),
     [endpointsConfig, endpoint],
   );
+
+  if (!showAdvancedInterface && iconData?.isCreatedByUser !== true) {
+    return (
+      <img
+        src="assets/branding/icon-192x192.png"
+        alt=""
+        aria-hidden="true"
+        className="size-7 rounded-full object-contain"
+      />
+    );
+  }
 
   if (iconData?.isCreatedByUser !== true && isImageURL(iconURL)) {
     return (

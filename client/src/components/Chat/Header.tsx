@@ -9,7 +9,7 @@ import { OpenSidebar, PresetsMenu } from './Menus';
 import BookmarkMenu from './Menus/BookmarkMenu';
 import { TemporaryChat } from './TemporaryChat';
 import AddMultiConvo from './AddMultiConvo';
-import { useHasAccess, useLocalize } from '~/hooks';
+import { useAdminInterface, useHasAccess, useLocalize } from '~/hooks';
 import { cn } from '~/utils';
 import store from '~/store';
 
@@ -19,6 +19,7 @@ function Header() {
   const { data: startupConfig } = useGetStartupConfig();
   const navVisible = useRecoilValue(store.sidebarExpanded);
   const localize = useLocalize();
+  const showAdvancedInterface = useAdminInterface();
 
   const interfaceConfig = useMemo(
     () => startupConfig?.interface ?? defaultInterface,
@@ -61,14 +62,18 @@ function Header() {
                   0: startupConfig?.appTitle ?? 'העוזר הארגוני של אהוד לויתן',
                 })}
               />
-              <ModelSelector startupConfig={startupConfig} />
-              {interfaceConfig.presets === true && interfaceConfig.modelSelect && <PresetsMenu />}
+              {showAdvancedInterface && <ModelSelector startupConfig={startupConfig} />}
+              {showAdvancedInterface &&
+                interfaceConfig.presets === true &&
+                interfaceConfig.modelSelect && <PresetsMenu />}
               {hasAccessToBookmarks === true && <BookmarkMenu />}
-              {hasAccessToMultiConvo === true && <AddMultiConvo />}
+              {showAdvancedInterface && hasAccessToMultiConvo === true && <AddMultiConvo />}
               {isSmallScreen && (
                 <>
                   <ExportAndShareMenu
-                    isSharedButtonEnabled={startupConfig?.sharedLinksEnabled ?? false}
+                    isSharedButtonEnabled={
+                      showAdvancedInterface && (startupConfig?.sharedLinksEnabled ?? false)
+                    }
                   />
                   {hasAccessToTemporaryChat === true && <TemporaryChat />}
                 </>
@@ -80,7 +85,9 @@ function Header() {
         {!isSmallScreen && (
           <div className="flex items-center gap-2">
             <ExportAndShareMenu
-              isSharedButtonEnabled={startupConfig?.sharedLinksEnabled ?? false}
+              isSharedButtonEnabled={
+                showAdvancedInterface && (startupConfig?.sharedLinksEnabled ?? false)
+              }
             />
             {hasAccessToTemporaryChat === true && <TemporaryChat />}
           </div>

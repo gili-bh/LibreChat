@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import { Constants } from 'librechat-data-provider';
 import type { TStartupConfig } from 'librechat-data-provider';
 import { useGetStartupConfig } from '~/data-provider';
-import { useLocalize } from '~/hooks';
+import { useAdminInterface, useLocalize } from '~/hooks';
 
 type FooterProps = {
   className?: string;
@@ -20,6 +20,7 @@ function Footer({ className, startupConfig }: FooterProps) {
   const { data: fetchedConfig } = useGetStartupConfig({ enabled: shouldFetchConfig });
   const config = shouldFetchConfig ? fetchedConfig : startupConfig;
   const localize = useLocalize();
+  const showAdvancedInterface = useAdminInterface();
 
   const privacyPolicy = config?.interface?.privacyPolicy;
   const termsOfService = config?.interface?.termsOfService;
@@ -36,14 +37,17 @@ function Footer({ className, startupConfig }: FooterProps) {
     </a>
   );
 
+  const defaultFooter = showAdvancedInterface
+    ? '[LibreChat ' +
+      Constants.VERSION +
+      '](https://librechat.ai) - ' +
+      localize('com_ui_latest_footer')
+    : '';
   const mainContentParts = (
-    typeof config?.customFooter === 'string'
-      ? config.customFooter
-      : '[LibreChat ' +
-        Constants.VERSION +
-        '](https://librechat.ai) - ' +
-        localize('com_ui_latest_footer')
-  ).split('|');
+    typeof config?.customFooter === 'string' ? config.customFooter : defaultFooter
+  )
+    .split('|')
+    .filter(Boolean);
 
   useEffect(() => {
     if (config?.analyticsGtmId != null && typeof window.google_tag_manager === 'undefined') {

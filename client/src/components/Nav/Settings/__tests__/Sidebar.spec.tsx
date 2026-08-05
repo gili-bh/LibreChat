@@ -13,6 +13,7 @@ const ctx: SettingsContextValue = {
   hasUserProvidedEndpoints: false,
   hasMultiConvo: false,
   hasPrompts: false,
+  isAdmin: false,
   isLocalProvider: true,
   twoFactorEnabled: false,
   allowAccountDeletion: true,
@@ -43,12 +44,17 @@ describe('Sidebar', () => {
   });
 
   it('shows the About tab when build info is enabled', () => {
-    setup({ aboutEnabled: true });
+    setup({ aboutEnabled: true, isAdmin: true });
     expect(screen.getByText('About')).toBeInTheDocument();
   });
 
+  it('hides the About tab from standard users when build info is enabled', () => {
+    setup({ aboutEnabled: true });
+    expect(screen.queryByText('About')).not.toBeInTheDocument();
+  });
+
   it('shows the Langfuse tab when Langfuse is available to the user', () => {
-    setup({ langfuseConnectionAccess: true });
+    setup({ langfuseConnectionAccess: true, isAdmin: true });
     expect(screen.getByText('Langfuse')).toBeInTheDocument();
   });
 
