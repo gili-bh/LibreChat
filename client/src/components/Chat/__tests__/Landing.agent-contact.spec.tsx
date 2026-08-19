@@ -103,12 +103,35 @@ describe('Landing agent contact', () => {
     mockUser = undefined;
   });
 
-  it('shows the branded greeting with the authenticated user name', () => {
-    mockUser = { name: 'אהוד', username: 'ehud' };
+  it.each([
+    ['English', 'Gili Ben Hamo'],
+    ['Hebrew', '\u05d0\u05d4\u05d5\u05d3'],
+    ['mixed Hebrew and English', 'Gili \u05d1\u05df Hamo'],
+  ])('isolates an authenticated %s name inside the RTL greeting', (_label, userName) => {
+    mockUser = { name: userName, username: 'fallback-user' };
 
     render(<Landing centerFormOnLanding={false} />);
 
-    expect(screen.getByText('שלום אהוד, במה אפשר לסייע לך היום?')).toBeInTheDocument();
+    const nameElement = screen.getByTestId('branded-greeting-user-name');
+    expect(nameElement.textContent).toBe(userName);
+    expect(nameElement).toHaveAttribute('dir', 'ltr');
+    expect(nameElement).toHaveAttribute('data-direction', 'ltr');
+    expect(nameElement).toHaveClass('inline-block');
+    expect(nameElement).toHaveStyle({
+      direction: 'ltr',
+      unicodeBidi: 'isolate',
+      display: 'inline-block',
+      textAlign: 'left',
+    });
+    const computedStyle = window.getComputedStyle(nameElement);
+    expect(computedStyle.direction).toBe('ltr');
+    expect(computedStyle.unicodeBidi).toBe('isolate');
+    expect(computedStyle.display).toBe('inline-block');
+    expect(computedStyle.textAlign).toBe('left');
+    expect(nameElement.parentElement).toHaveAttribute('dir', 'rtl');
+    expect(nameElement.parentElement).toHaveTextContent(
+      `שלום ${userName}, במה אפשר לסייע לך היום?`,
+    );
     expect(
       screen.getByText(
         'העוזר הארגוני כאן כדי לעזור לך בכתיבה, ניתוח מסמכים, מענה על שאלות והפקת תובנות מקצועיות.',

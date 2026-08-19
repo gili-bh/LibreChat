@@ -22,6 +22,7 @@ const containerClassName =
  * re-rendered every grapheme span on each Landing render. */
 const greetingAnimationFrom = { opacity: 0, transform: 'translate3d(0,50px,0)' };
 const greetingAnimationTo = { opacity: 1, transform: 'translate3d(0,0,0)' };
+const userNamePlaceholder = '__USER_NAME_PLACEHOLDER__';
 
 function getTextSizeClass(text: string | undefined | null) {
   if (!text) {
@@ -76,7 +77,12 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
   const name = entity?.name ?? '';
   const isBrandedLanding = !entity;
   const userDisplayName = user?.name?.trim() || user?.username?.trim() || localize('com_nav_user');
-  const greetingText = localize('com_ui_branded_home_welcome', { name: userDisplayName });
+  const greetingTemplate = localize('com_ui_branded_home_welcome', {
+    name: userNamePlaceholder,
+  });
+  const userNameIndex = greetingTemplate.indexOf(userNamePlaceholder);
+  const greetingBeforeName = greetingTemplate.slice(0, userNameIndex);
+  const greetingAfterName = greetingTemplate.slice(userNameIndex + userNamePlaceholder.length);
   const description = isBrandedLanding
     ? localize('com_ui_branded_home_description')
     : ((entity?.description || conversation?.greeting) ?? '');
@@ -184,19 +190,27 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
               />
             </div>
           ) : (
-            <SplitText
-              key={`split-text-${greetingText}`}
-              text={greetingText}
-              className="text-xl font-medium text-text-primary sm:text-2xl"
-              delay={50}
-              textAlign="center"
-              animationFrom={greetingAnimationFrom}
-              animationTo={greetingAnimationTo}
-              easing={easings.easeOutCubic}
-              threshold={0}
-              rootMargin="0px"
-              onLineCountChange={handleLineCountChange}
-            />
+            <p
+              dir="rtl"
+              className="animate-fadeIn text-center text-xl font-medium text-text-primary sm:text-2xl"
+            >
+              {greetingBeforeName}
+              <bdi
+                dir="ltr"
+                data-direction="ltr"
+                data-testid="branded-greeting-user-name"
+                className="inline-block"
+                style={{
+                  direction: 'ltr',
+                  unicodeBidi: 'isolate',
+                  display: 'inline-block',
+                  textAlign: 'left',
+                }}
+              >
+                {userDisplayName}
+              </bdi>
+              {greetingAfterName}
+            </p>
           )}
         </div>
         {description &&

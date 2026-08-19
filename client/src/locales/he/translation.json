@@ -299,7 +299,7 @@
   "com_endpoint_instructions_assistants_placeholder": "עובר את הוראות הסייען. זה שימושי לשינוי ההתנהגות על בסיס ריצה.",
   "com_endpoint_max_output_tokens": "אסימוני פלט מרבי",
   "com_endpoint_message": "הודעה",
-  "com_endpoint_message_new": "הודעה {{0}}",
+  "com_endpoint_message_new": "יש לך שאלה ל- LE AI?...",
   "com_endpoint_message_not_appendable": "ערוך את ההודעה שלך או צור מחדש.",
   "com_endpoint_my_preset": "ההגדרה המוגדרת מראש שלי",
   "com_endpoint_no_presets": "אין עדיין הגדרות מוגדרות מראש, השתמש בלחצן ההגדרות כדי ליצור אחת",
