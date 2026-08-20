@@ -174,6 +174,9 @@ const refreshController = async (req, res) => {
       const reuseUserId = reusableSessionToken ? getValidOpenIDReuseUserId(parsedCookies) : null;
       if (reuseUserId) {
         const user = await getUserById(reuseUserId, AUTH_REFRESH_USER_PROJECTION);
+        if (user?.disabled === true) {
+          return res.status(403).send('Account disabled');
+        }
         if (user) {
           const cloudFrontCookiesSet = setCloudFrontAuthCookies(req, res, user);
           logger.debug('[refreshController] OpenID session token reused', {
@@ -228,6 +231,10 @@ const refreshController = async (req, res) => {
         return res.status(401).redirect('/login');
       }
 
+      if (user.disabled === true) {
+        return res.status(403).send('Account disabled');
+      }
+
       // Handle migration: update user with openidId if found by email without openidId
       // Also handle case where user has mismatched openidId (e.g., after database switch)
       if (migration || user.openidId !== claims.sub) {
@@ -266,6 +273,9 @@ const refreshController = async (req, res) => {
     const user = await getUserById(payload.id, AUTH_REFRESH_USER_PROJECTION);
     if (!user) {
       return res.status(401).redirect('/login');
+    }
+    if (user.disabled === true) {
+      return res.status(403).send('Account disabled');
     }
 
     const userId = payload.id;

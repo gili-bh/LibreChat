@@ -201,8 +201,17 @@ export type AdminUserListItem = {
   avatar: string;
   role: string;
   provider: string;
+  disabled: boolean;
+  emailVerified: boolean;
   createdAt?: string;
   updatedAt?: string;
+};
+
+export type AdminUserListResponse = {
+  users: AdminUserListItem[];
+  total: number;
+  limit: number;
+  offset: number;
 };
 
 /** Minimal user info returned by user search endpoints. */

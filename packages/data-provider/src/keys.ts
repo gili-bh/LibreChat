@@ -86,6 +86,7 @@ export enum QueryKeys {
   skillStates = 'skillStates',
   /* General user favorites */
   favorites = 'favorites',
+  adminUsers = 'adminUsers',
 }
 
 // Dynamic query keys that require parameters
@@ -94,6 +95,7 @@ export const DynamicQueryKeys = {
 } as const;
 
 export enum MutationKeys {
+  adminUser = 'adminUser',
   updateLangfuseConnection = 'updateLangfuseConnection',
   testLangfuseConnection = 'testLangfuseConnection',
   createAgentApiKey = 'createAgentApiKey',

@@ -139,6 +139,11 @@ const openIdJwtLogin = (openIdConfig) => {
           return;
         }
 
+        if (user?.disabled === true) {
+          done(null, false, { message: 'Account disabled.' });
+          return;
+        }
+
         if (user) {
           user.id = user._id.toString();
           /** Absent on the full doc means local user; null skips getUserPrincipals' fallback lookup */

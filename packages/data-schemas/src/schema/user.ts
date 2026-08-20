@@ -65,6 +65,10 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
       type: String,
       default: SystemRoles.USER,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     googleId: {
       type: String,
     },

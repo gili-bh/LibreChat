@@ -1,3 +1,5 @@
+import bcrypt from 'bcryptjs';
+
 interface UserWithPassword {
   password?: string;
   [key: string]: unknown;
@@ -22,4 +24,9 @@ export async function comparePassword(
   }
 
   return deps.compare(candidatePassword, user.password);
+}
+
+/** Hashes a local-auth password using LibreChat's established bcrypt cost. */
+export async function hashPassword(password: string): Promise<string> {
+  return bcrypt.hash(password, 10);
 }

@@ -72,4 +72,17 @@ describe('jwtStrategy', () => {
 
     expect(user).toBe(false);
   });
+
+  it('rejects a disabled user even with a valid token', async () => {
+    getUserById.mockResolvedValue({
+      _id: { toString: () => 'disabled-user' },
+      role: SystemRoles.USER,
+      disabled: true,
+    });
+
+    const { user, info } = await invokeVerify({ id: 'disabled-user' });
+
+    expect(user).toBe(false);
+    expect(info).toEqual({ message: 'Account disabled.' });
+  });
 });

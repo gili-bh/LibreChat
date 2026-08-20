@@ -21,6 +21,7 @@ import ShareRoute from './ShareRoute';
 import ChatRoute from './ChatRoute';
 import Search from './Search';
 import Root from './Root';
+import AdminRoute from '~/components/Admin/AdminRoute';
 
 const AuthLayout = () => (
   <AuthContextProvider>
@@ -50,6 +51,9 @@ const loadProjectWorkspace = () =>
   import('~/components/Projects').then((m) => ({
     Component: m.ProjectWorkspace,
   }));
+
+const loadAdminUsers = () =>
+  import('~/components/Admin/Users').then((m) => ({ Component: m.default }));
 
 const baseEl = document.querySelector('base');
 const baseHref = baseEl?.getAttribute('href') || '/';
@@ -133,6 +137,10 @@ export const router = createBrowserRouter(
             {
               path: 'search',
               element: <Search />,
+            },
+            {
+              element: <AdminRoute />,
+              children: [{ path: 'admin/users', lazy: loadAdminUsers }],
             },
             {
               path: 'prompts',

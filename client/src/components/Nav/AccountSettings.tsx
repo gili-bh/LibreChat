@@ -1,4 +1,5 @@
 import { useState, memo, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
 import * as Menu from '@ariakit/react/menu';
 import { GearIcon, DropdownMenuSeparator, Avatar } from '@librechat/client';
@@ -12,7 +13,9 @@ import {
   LogOut,
   Scale,
   ShieldCheck,
+  Users,
 } from 'lucide-react';
+import { SystemRoles } from 'librechat-data-provider';
 import { ArchivedChatsModal } from '~/components/Nav/SettingsTabs/General/ArchivedChatsModal';
 import { MyFilesModal } from '~/components/Chat/Input/Files/MyFilesModal';
 import { useGetStartupConfig, useGetUserBalance } from '~/data-provider';
@@ -104,6 +107,7 @@ function AccountSettings({ collapsed = false }: { collapsed?: boolean }) {
   const setShowShortcutsDialog = useSetRecoilState(store.showShortcutsDialog);
   const [showArchived, setShowArchived] = useState(false);
   const accountSettingsButtonRef = useRef<HTMLButtonElement>(null);
+  const navigate = useNavigate();
 
   return (
     <Menu.MenuProvider placement={collapsed ? 'right-end' : undefined}>
@@ -176,6 +180,33 @@ function AccountSettings({ collapsed = false }: { collapsed?: boolean }) {
           <GearIcon className="icon-md" aria-hidden="true" />
           {localize('com_nav_settings')}
         </Menu.MenuItem>
+        {user?.role === SystemRoles.ADMIN && (
+          <Menu.MenuProvider placement="right-start">
+            <Menu.MenuItem
+              hideOnClick={false}
+              render={
+                <Menu.MenuButton className="select-item flex w-full cursor-pointer items-center gap-2 text-sm" />
+              }
+            >
+              <ShieldCheck className="icon-md" aria-hidden="true" />
+              <span className="flex-1 text-left">{localize('com_admin_system_management')}</span>
+              <ChevronRight className="size-4 text-text-secondary" aria-hidden="true" />
+            </Menu.MenuItem>
+            <Menu.Menu
+              portal
+              gutter={12}
+              className="account-settings-popover popover-ui popover-from-left z-[126] w-[244px] rounded-lg"
+            >
+              <Menu.MenuItem
+                onClick={() => navigate('/admin/users')}
+                className="select-item text-sm"
+              >
+                <Users className="icon-md" aria-hidden="true" />
+                {localize('com_admin_users_nav')}
+              </Menu.MenuItem>
+            </Menu.Menu>
+          </Menu.MenuProvider>
+        )}
         <DropdownMenuSeparator />
         <Menu.MenuItem onClick={() => logout()} className="select-item text-sm">
           <LogOut className="icon-md" aria-hidden="true" />

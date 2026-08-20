@@ -43,6 +43,12 @@ const buildQuery = (params: Record<string, unknown>): string => {
 export const health = () => `${BASE_URL}/health`;
 export const user = () => `${BASE_URL}/api/user`;
 
+export const adminUsers = (params?: { q?: string; limit?: number; offset?: number }) =>
+  `${BASE_URL}/api/admin/users${params ? buildQuery(params) : ''}`;
+export const adminUser = (id: string) => `${BASE_URL}/api/admin/users/${encodeURIComponent(id)}`;
+export const adminUserPassword = (id: string) => `${adminUser(id)}/reset-password`;
+export const adminUserStatus = (id: string) => `${adminUser(id)}/status`;
+
 export const balance = () => `${BASE_URL}/api/balance`;
 
 export const userPlugins = () => `${BASE_URL}/api/user/plugins`;

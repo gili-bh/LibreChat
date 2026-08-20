@@ -13,7 +13,10 @@ const jwtLogin = () =>
     async (payload, done) => {
       try {
         const user = await getUserById(payload?.id, '-password -__v -totpSecret -backupCodes');
-        if (user) {
+        if (user?.disabled === true) {
+          logger.warn('[jwtLogin] Disabled account attempted access: ' + payload?.id);
+          done(null, false, { message: 'Account disabled.' });
+        } else if (user) {
           user.id = user._id.toString();
           /** Absent on the full doc means local user; null skips getUserPrincipals' fallback lookup */
           user.idOnTheSource ??= null;

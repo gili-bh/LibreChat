@@ -44,6 +44,37 @@ export function deleteUser(payload?: t.TDeleteUserRequest): Promise<unknown> {
   return request.deleteWithOptions(endpoints.deleteUser(), { data: payload });
 }
 
+export function getAdminUsers(params: {
+  q?: string;
+  limit?: number;
+  offset?: number;
+}): Promise<t.TAdminUsersResponse> {
+  return request.get(endpoints.adminUsers(params));
+}
+
+export function createAdminUser(payload: t.TCreateAdminUser): Promise<{ user: t.TAdminUser }> {
+  return request.post(endpoints.adminUsers(), payload);
+}
+
+export function updateAdminUser(
+  id: string,
+  payload: t.TUpdateAdminUser,
+): Promise<{ user: t.TAdminUser }> {
+  return request.patch(endpoints.adminUser(id), payload);
+}
+
+export function resetAdminUserPassword(id: string, password: string): Promise<{ success: true }> {
+  return request.post(endpoints.adminUserPassword(id), { password });
+}
+
+export function setAdminUserStatus(id: string, disabled: boolean): Promise<{ user: t.TAdminUser }> {
+  return request.post(endpoints.adminUserStatus(id), { disabled });
+}
+
+export function deleteAdminUser(id: string): Promise<{ success: true }> {
+  return request.delete(endpoints.adminUser(id));
+}
+
 export function getFavorites(): Promise<q.TUserFavorite[]> {
   return request.get(`${endpoints.apiBaseUrl()}/api/user/settings/favorites`);
 }
