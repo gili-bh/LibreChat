@@ -35,6 +35,7 @@ export default function useTextarea({
   setIsScrollable,
   disabled = false,
   placeholder,
+  suppressNativePlaceholder = false,
   allowSubmitWhileGenerating = false,
   onDuringRunModifier,
 }: {
@@ -43,6 +44,7 @@ export default function useTextarea({
   setIsScrollable: React.Dispatch<React.SetStateAction<boolean>>;
   disabled?: boolean;
   placeholder?: string;
+  suppressNativePlaceholder?: boolean;
   /** Lets Enter submit during a run (during-run steering/queuing routes it). */
   allowSubmitWhileGenerating?: boolean;
   /** During-run modifier chords: ⌘/Ctrl+Enter = the non-default action,
@@ -90,6 +92,11 @@ export default function useTextarea({
   }, [activePrompt, setActivePrompt, textAreaRef]);
 
   useEffect(() => {
+    if (suppressNativePlaceholder) {
+      textAreaRef.current?.removeAttribute('placeholder');
+      return;
+    }
+
     const currentValue = textAreaRef.current?.value ?? '';
     if (currentValue) {
       return;
@@ -162,6 +169,7 @@ export default function useTextarea({
     latestMessage,
     isNotAppendable,
     placeholder,
+    suppressNativePlaceholder,
   ]);
 
   const handleKeyDown = useCallback(

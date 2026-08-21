@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import AdminUsers from '../Users';
 
 const mockMutateAsync = jest.fn().mockResolvedValue({});
@@ -59,5 +59,15 @@ describe('AdminUsers', () => {
     render(<AdminUsers />);
     fireEvent.click(screen.getAllByRole('button', { name: action })[0]);
     expect(screen.getByRole('dialog')).toHaveTextContent(expected);
+  });
+
+  it('isolates an English user name inside the RTL delete sentence', () => {
+    render(<AdminUsers />);
+    fireEvent.click(screen.getAllByRole('button', { name: 'com_admin_users_delete' })[0]);
+
+    const name = within(screen.getByRole('dialog')).getByText('Gili Ben Hamo');
+    expect(name.textContent).toBe('Gili Ben Hamo');
+    expect(name.tagName).toBe('BDI');
+    expect(name).toHaveAttribute('dir', 'auto');
   });
 });

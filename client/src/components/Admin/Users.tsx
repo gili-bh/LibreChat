@@ -148,7 +148,11 @@ function UserDialog({ state, close }: { state: DialogState; close: () => void })
           )}
           {state.type === 'delete' && (
             <p>
-              {localize('com_admin_users_delete_confirm')} <strong>{state.user.name}</strong>?
+              {localize('com_admin_users_delete_confirm')}{' '}
+              <strong>
+                <bdi dir="auto">{state.user.name}</bdi>
+              </strong>
+              ?
             </p>
           )}
           {error && (
@@ -254,7 +258,9 @@ export default function AdminUsers() {
               <tbody>
                 {users.map((user) => (
                   <tr key={user.id} className="border-t border-border-light">
-                    <td className="p-3 font-medium">{user.name}</td>
+                    <td className="p-3 font-medium">
+                      <bdi dir="auto">{user.name}</bdi>
+                    </td>
                     <td className="p-3" dir="ltr">
                       {user.email}
                     </td>
@@ -316,7 +322,9 @@ export default function AdminUsers() {
           <div className="space-y-3 md:hidden">
             {users.map((user) => (
               <article key={user.id} className="rounded-md border border-border-light p-4">
-                <h2 className="font-semibold text-text-primary">{user.name}</h2>
+                <h2 className="font-semibold text-text-primary">
+                  <bdi dir="auto">{user.name}</bdi>
+                </h2>
                 <p className="mt-1 text-sm text-text-secondary" dir="ltr">
                   {user.email}
                 </p>

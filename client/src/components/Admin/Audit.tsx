@@ -42,7 +42,9 @@ function ConversationInspector({
   return (
     <OGDialog open onOpenChange={(open) => !open && close()}>
       <OGDialogContent className="max-h-[92vh] w-11/12 max-w-3xl overflow-y-auto" dir="rtl">
-        <OGDialogTitle>{detail.data?.title || conversation.title}</OGDialogTitle>
+        <OGDialogTitle>
+          <bdi dir="auto">{detail.data?.title || conversation.title}</bdi>
+        </OGDialogTitle>
         <p className="mt-1 text-sm text-text-secondary">
           <bdi dir="auto">{detail.data?.employee.name || conversation.employee.name}</bdi>
           {' · '}
@@ -287,7 +289,9 @@ export default function AdminAudit() {
                       <td className="p-3" dir="ltr">
                         {row.employee.email}
                       </td>
-                      <td className="max-w-48 truncate p-3">{row.title}</td>
+                      <td className="max-w-48 truncate p-3">
+                        <bdi dir="auto">{row.title}</bdi>
+                      </td>
                       <td className="max-w-64 truncate p-3" dir="auto">
                         {row.preview}
                       </td>
@@ -314,7 +318,9 @@ export default function AdminAudit() {
                   className="rounded-md border border-border-light p-4"
                 >
                   <div className="flex justify-between gap-3">
-                    <h2 className="font-semibold">{row.title}</h2>
+                    <h2 className="font-semibold">
+                      <bdi dir="auto">{row.title}</bdi>
+                    </h2>
                     <time className="text-xs text-text-secondary">{formatDate(row.updatedAt)}</time>
                   </div>
                   <p className="mt-1 text-sm">

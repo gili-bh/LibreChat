@@ -1,5 +1,6 @@
 import { memo, useRef, useMemo, useEffect, useState, useCallback } from 'react';
 import { useWatch } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { TextareaAutosize } from '@librechat/client';
 import { useRecoilState, useRecoilValue, useRecoilCallback } from 'recoil';
 import { Constants, isAssistantsEndpoint, isAgentsEndpoint } from 'librechat-data-provider';
@@ -23,6 +24,9 @@ import {
   useAssistantsMapContext,
 } from '~/Providers';
 import PendingManualSkillsChips from './PendingManualSkillsChips';
+import BrandedComposerPlaceholder, {
+  getBrandedComposerPlaceholder,
+} from './BrandedComposerPlaceholder';
 import useAskAnswerMode from '~/hooks/Input/useAskAnswerMode';
 import AskUserQuestionPopover from './AskUserQuestionPopover';
 import { cn, getModelSpec, removeFocusRings } from '~/utils';
@@ -83,6 +87,7 @@ const ChatForm = memo(function ChatForm({
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   useFocusChatEffect(textAreaRef);
   const localize = useLocalize();
+  const { i18n } = useTranslation();
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [, setIsScrollable] = useState(false);
@@ -375,6 +380,18 @@ const ChatForm = memo(function ChatForm({
     index,
     textAreaRef,
   });
+  const textValue = useWatch({ control: methods.control, name: 'text' });
+  const interfaceLanguage = i18n.resolvedLanguage ?? i18n.language;
+  const isHebrewInterface = interfaceLanguage.toLowerCase().startsWith('he');
+  const showBrandedPlaceholder =
+    isHebrewInterface &&
+    conversationId === Constants.NEW_CONVO &&
+    placeholder == null &&
+    !answerMode.active &&
+    !disableInputs &&
+    !isAgentsEndpoint(endpoint) &&
+    !isAssistantsEndpoint(endpoint) &&
+    (textValue ?? '').length === 0;
   const {
     isNotAppendable,
     handlePaste,
@@ -390,6 +407,7 @@ const ChatForm = memo(function ChatForm({
     placeholder: answerMode.active
       ? (answerMode.otherLabel ?? localize('com_ui_something_else'))
       : placeholder,
+    suppressNativePlaceholder: showBrandedPlaceholder,
     // Enter stays live during a run when it can steer/queue instead of send.
     allowSubmitWhileGenerating: steering.duringRunActive,
     onDuringRunModifier: steering.duringRunActive ? handleDuringRunModifier : undefined,
@@ -405,8 +423,6 @@ const ChatForm = memo(function ChatForm({
       [methods],
     ),
   });
-
-  const textValue = useWatch({ control: methods.control, name: 'text' });
 
   useEffect(() => {
     if (textAreaRef.current) {
@@ -588,6 +604,7 @@ const ChatForm = memo(function ChatForm({
                         : undefined
                     }
                   >
+                    {showBrandedPlaceholder && <BrandedComposerPlaceholder />}
                     <TextareaAutosize
                       {...registerProps}
                       dir="auto"
@@ -617,6 +634,9 @@ const ChatForm = memo(function ChatForm({
                       onFocus={handleTextareaFocus}
                       onBlur={handleTextareaBlur}
                       aria-label={localize('com_ui_message_input')}
+                      aria-placeholder={
+                        showBrandedPlaceholder ? getBrandedComposerPlaceholder(localize) : undefined
+                      }
                       onClick={handleFocusOrClick}
                       style={{ height: 44, overflowY: 'auto' }}
                       className={cn(
