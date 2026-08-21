@@ -54,6 +54,10 @@ const loadProjectWorkspace = () =>
 
 const loadAdminUsers = () =>
   import('~/components/Admin/Users').then((m) => ({ Component: m.default }));
+const loadAdminAudit = () =>
+  import('~/components/Admin/Audit').then((m) => ({ Component: m.default }));
+const loadAdminStatistics = () =>
+  import('~/components/Admin/Statistics').then((m) => ({ Component: m.default }));
 
 const baseEl = document.querySelector('base');
 const baseHref = baseEl?.getAttribute('href') || '/';
@@ -140,7 +144,11 @@ export const router = createBrowserRouter(
             },
             {
               element: <AdminRoute />,
-              children: [{ path: 'admin/users', lazy: loadAdminUsers }],
+              children: [
+                { path: 'admin/users', lazy: loadAdminUsers },
+                { path: 'admin/audit', lazy: loadAdminAudit },
+                { path: 'admin/statistics', lazy: loadAdminStatistics },
+              ],
             },
             {
               path: 'prompts',

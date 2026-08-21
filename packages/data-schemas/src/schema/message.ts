@@ -198,6 +198,8 @@ const messageSchema: Schema<IMessage> = new Schema(
 messageSchema.index({ expiredAt: 1 }, { expireAfterSeconds: 0 });
 messageSchema.index({ createdAt: 1 });
 messageSchema.index({ messageId: 1, user: 1, tenantId: 1 }, { unique: true });
+messageSchema.index({ tenantId: 1, conversationId: 1, user: 1, createdAt: 1 });
+messageSchema.index({ tenantId: 1, createdAt: 1, user: 1 });
 
 // index for MeiliSearch sync operations
 messageSchema.index({ _meiliIndex: 1, isTemporary: 1, expiredAt: 1 });

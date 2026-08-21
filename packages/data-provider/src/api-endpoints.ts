@@ -49,6 +49,16 @@ export const adminUser = (id: string) => `${BASE_URL}/api/admin/users/${encodeUR
 export const adminUserPassword = (id: string) => `${adminUser(id)}/reset-password`;
 export const adminUserStatus = (id: string) => `${adminUser(id)}/status`;
 
+const adminUsageRoot = `${BASE_URL}/api/admin/usage`;
+export const adminAuditConversations = (params?: Record<string, unknown>) =>
+  `${adminUsageRoot}/conversations${params ? buildQuery(params) : ''}`;
+export const adminAuditConversation = (conversationId: string, params?: Record<string, unknown>) =>
+  `${adminUsageRoot}/conversations/${encodeURIComponent(conversationId)}${params ? buildQuery(params) : ''}`;
+export const adminUsageStatistics = (days: 7 | 30 | 90) =>
+  `${adminUsageRoot}/statistics${buildQuery({ days })}`;
+export const adminUsageEmployees = (params?: Record<string, unknown>) =>
+  `${adminUsageRoot}/employees${params ? buildQuery(params) : ''}`;
+
 export const balance = () => `${BASE_URL}/api/balance`;
 
 export const userPlugins = () => `${BASE_URL}/api/user/plugins`;

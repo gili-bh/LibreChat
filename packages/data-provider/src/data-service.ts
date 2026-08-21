@@ -75,6 +75,31 @@ export function deleteAdminUser(id: string): Promise<{ success: true }> {
   return request.delete(endpoints.adminUser(id));
 }
 
+export function getAdminAuditConversations(
+  params: t.TAdminUsageFilters,
+): Promise<t.TAdminAuditPage> {
+  return request.get(endpoints.adminAuditConversations(params));
+}
+
+export function getAdminAuditConversation(
+  conversationId: string,
+  params: { limit?: number; offset?: number },
+): Promise<t.TAdminConversationDetail> {
+  return request.get(endpoints.adminAuditConversation(conversationId, params));
+}
+
+export function getAdminUsageStatistics(days: 7 | 30 | 90): Promise<t.TAdminUsageStatistics> {
+  return request.get(endpoints.adminUsageStatistics(days));
+}
+
+export function getAdminUsageEmployees(params: {
+  q?: string;
+  limit?: number;
+  offset?: number;
+}): Promise<t.TAdminEmployeesPage> {
+  return request.get(endpoints.adminUsageEmployees(params));
+}
+
 export function getFavorites(): Promise<q.TUserFavorite[]> {
   return request.get(`${endpoints.apiBaseUrl()}/api/user/settings/favorites`);
 }

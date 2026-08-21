@@ -943,3 +943,15 @@ export type {
   TCreateAdminUser,
   TUpdateAdminUser,
 } from './types/adminUsers';
+export type {
+  TAdminEmployee,
+  TAdminAuditConversation,
+  TAdminAuditPage,
+  TAdminAuditMessage,
+  TAdminAuditFile,
+  TAdminConversationDetail,
+  TAdminUsageFilters,
+  TAdminDailyUsage,
+  TAdminUsageStatistics,
+  TAdminEmployeesPage,
+} from './types/usage';

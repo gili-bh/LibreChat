@@ -14,6 +14,8 @@ import {
   Scale,
   ShieldCheck,
   Users,
+  Activity,
+  BarChart3,
 } from 'lucide-react';
 import { SystemRoles } from 'librechat-data-provider';
 import { ArchivedChatsModal } from '~/components/Nav/SettingsTabs/General/ArchivedChatsModal';
@@ -203,6 +205,20 @@ function AccountSettings({ collapsed = false }: { collapsed?: boolean }) {
               >
                 <Users className="icon-md" aria-hidden="true" />
                 {localize('com_admin_users_nav')}
+              </Menu.MenuItem>
+              <Menu.MenuItem
+                onClick={() => navigate('/admin/audit')}
+                className="select-item text-sm"
+              >
+                <Activity className="icon-md" aria-hidden="true" />
+                {localize('com_admin_audit_nav')}
+              </Menu.MenuItem>
+              <Menu.MenuItem
+                onClick={() => navigate('/admin/statistics')}
+                className="select-item text-sm"
+              >
+                <BarChart3 className="icon-md" aria-hidden="true" />
+                {localize('com_admin_statistics_nav')}
               </Menu.MenuItem>
             </Menu.Menu>
           </Menu.MenuProvider>

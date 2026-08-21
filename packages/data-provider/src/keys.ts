@@ -87,6 +87,10 @@ export enum QueryKeys {
   /* General user favorites */
   favorites = 'favorites',
   adminUsers = 'adminUsers',
+  adminAudit = 'adminAudit',
+  adminAuditConversation = 'adminAuditConversation',
+  adminUsageStatistics = 'adminUsageStatistics',
+  adminUsageEmployees = 'adminUsageEmployees',
 }
 
 // Dynamic query keys that require parameters
