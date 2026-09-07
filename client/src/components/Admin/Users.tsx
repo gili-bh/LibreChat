@@ -113,7 +113,7 @@ function UserDialog({ state, close }: { state: DialogState; close: () => void })
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
-                  minLength={3}
+                  minLength={1}
                 />
               </label>
               <label className="block text-sm">

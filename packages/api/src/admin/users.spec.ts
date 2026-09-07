@@ -104,14 +104,14 @@ describe('admin user handlers', () => {
 
   it('accepts a Hebrew-only name update', async () => {
     const mocks = deps({ findUsers: jest.fn().mockResolvedValue([user()]) });
-    const { req, res, status, json } = reqRes({ name: 'גילי בן חמו' });
+    const { req, res, status, json } = reqRes({ name: 'דן' });
 
     await createAdminUsersHandlers(mocks).updateUser(req, res);
 
-    expect(mocks.updateUser).toHaveBeenCalledWith(targetId, { name: 'גילי בן חמו' });
+    expect(mocks.updateUser).toHaveBeenCalledWith(targetId, { name: 'דן' });
     expect(status).toHaveBeenCalledWith(200);
     expect(json).toHaveBeenCalledWith({
-      user: expect.objectContaining({ name: 'גילי בן חמו' }),
+      user: expect.objectContaining({ name: 'דן' }),
     });
   });
 

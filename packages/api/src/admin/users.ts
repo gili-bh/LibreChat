@@ -37,7 +37,7 @@ const usernameSchema = z
   .transform((value) => value.toLowerCase());
 const createUserSchema = z
   .object({
-    name: z.string().trim().min(3).max(80),
+    name: z.string().trim().min(1).max(80),
     email: emailSchema,
     username: usernameSchema,
     password: z.string(),
@@ -47,7 +47,7 @@ const createUserSchema = z
   .strict();
 const updateUserSchema = z
   .object({
-    name: z.string().trim().min(3).max(80).optional(),
+    name: z.string().trim().min(1).max(80).optional(),
     email: emailSchema.optional(),
     username: usernameSchema.optional(),
     role: roleSchema.optional(),

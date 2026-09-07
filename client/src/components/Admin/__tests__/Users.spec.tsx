@@ -80,14 +80,14 @@ describe('AdminUsers', () => {
     fireEvent.click(screen.getAllByRole('button', { name: 'com_admin_users_edit' })[0]);
 
     fireEvent.change(screen.getByLabelText('com_admin_users_name'), {
-      target: { value: 'גילי בן חמו' },
+      target: { value: 'דן' },
     });
     fireEvent.click(screen.getByRole('button', { name: 'com_ui_save' }));
 
     await waitFor(() =>
       expect(mockMutateAsync).toHaveBeenCalledWith({
         id: 'user-1',
-        payload: { name: 'גילי בן חמו' },
+        payload: { name: 'דן' },
       }),
     );
   });
