@@ -7,7 +7,7 @@ import {
   useToastContext,
 } from '@librechat/client';
 import { Search, UserPlus } from 'lucide-react';
-import { SystemRoles, type TAdminUser, type TCreateAdminUser } from 'librechat-data-provider';
+import { SystemRoles, type TAdminUser, type TUpdateAdminUser } from 'librechat-data-provider';
 import { useAdminUserMutations, useAdminUsers } from '~/data-provider';
 import { useLocalize } from '~/hooks';
 
@@ -20,6 +20,19 @@ type DialogState =
 
 const inputClass =
   'w-full rounded-md border border-border-medium bg-surface-primary px-3 py-2 text-text-primary outline-none focus:ring-2 focus:ring-ring-primary';
+
+function getDialogTitleKey(state: NonNullable<DialogState>) {
+  switch (state.type) {
+    case 'create':
+      return 'com_admin_users_create';
+    case 'edit':
+      return 'com_admin_users_edit';
+    case 'password':
+      return 'com_admin_users_reset_password';
+    case 'delete':
+      return 'com_admin_users_delete';
+  }
+}
 
 function UserDialog({ state, close }: { state: DialogState; close: () => void }) {
   const localize = useLocalize();
@@ -52,9 +65,26 @@ function UserDialog({ state, close }: { state: DialogState; close: () => void })
       if (state.type === 'create') {
         await mutations.createUser.mutateAsync({ name, email, username, password, role });
       } else if (state.type === 'edit') {
+        const payload: TUpdateAdminUser = {};
+        if (name !== state.user.name) {
+          payload.name = name;
+        }
+        if (email !== state.user.email) {
+          payload.email = email;
+        }
+        if (username !== state.user.username) {
+          payload.username = username;
+        }
+        if (role !== state.user.role) {
+          payload.role = role;
+        }
+        if (Object.keys(payload).length === 0) {
+          done();
+          return;
+        }
         await mutations.updateUser.mutateAsync({
           id: state.user.id,
-          payload: { name, email, username, role },
+          payload,
         });
       } else if (state.type === 'password') {
         await mutations.resetPassword.mutateAsync({ id: state.user.id, password });
@@ -67,14 +97,7 @@ function UserDialog({ state, close }: { state: DialogState; close: () => void })
     }
   };
 
-  const title =
-    state.type === 'create'
-      ? localize('com_admin_users_create')
-      : state.type === 'edit'
-        ? localize('com_admin_users_edit')
-        : state.type === 'password'
-          ? localize('com_admin_users_reset_password')
-          : localize('com_admin_users_delete');
+  const title = localize(getDialogTitleKey(state));
 
   return (
     <OGDialog open onOpenChange={(open) => !open && close()}>

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import AdminUsers from '../Users';
 
 const mockMutateAsync = jest.fn().mockResolvedValue({});
@@ -10,7 +10,7 @@ jest.mock('~/data-provider', () => ({
         {
           id: 'user-1',
           name: 'Gili Ben Hamo',
-          username: 'gili',
+          username: 'gili-ben-hamo',
           email: 'gili@example.com',
           role: 'USER',
           provider: 'local',
@@ -46,6 +46,10 @@ jest.mock('@librechat/client', () => ({
 }));
 
 describe('AdminUsers', () => {
+  beforeEach(() => {
+    mockMutateAsync.mockClear();
+  });
+
   it('opens the create-user dialog', () => {
     render(<AdminUsers />);
     fireEvent.click(screen.getByRole('button', { name: 'com_admin_users_create' }));
@@ -69,5 +73,22 @@ describe('AdminUsers', () => {
     expect(name.textContent).toBe('Gili Ben Hamo');
     expect(name.tagName).toBe('BDI');
     expect(name).toHaveAttribute('dir', 'auto');
+  });
+
+  it('sends only the changed Hebrew name when editing a legacy user', async () => {
+    render(<AdminUsers />);
+    fireEvent.click(screen.getAllByRole('button', { name: 'com_admin_users_edit' })[0]);
+
+    fireEvent.change(screen.getByLabelText('com_admin_users_name'), {
+      target: { value: 'גילי בן חמו' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'com_ui_save' }));
+
+    await waitFor(() =>
+      expect(mockMutateAsync).toHaveBeenCalledWith({
+        id: 'user-1',
+        payload: { name: 'גילי בן חמו' },
+      }),
+    );
   });
 });
