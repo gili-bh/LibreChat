@@ -44,14 +44,15 @@ const allowed = [
 cfg.fileConfig ??= {};
 cfg.fileConfig.endpoints ??= {};
 const d = cfg.fileConfig.endpoints.default ??= {};
-// Preserve endpoint-specific settings, but enforce these limits on default.
-// Other endpoints may override these values; check Agents separately.
-d.fileLimit = 5;
-d.fileSizeLimit = 25;
-d.totalSizeLimit = 50;
-const prev = Array.isArray(d.supportedMimeTypes) ? d.supportedMimeTypes : [];
-// Do not broaden an existing restrictive allowlist with undocumented formats.
-d.supportedMimeTypes = [...new Set([...prev, ...allowed])];
+// Apply limits to both the default and Agents endpoint; preserve other settings.
+for (const endpoint of ['default', 'agents']) {
+  const policy = cfg.fileConfig.endpoints[endpoint] ??= {};
+  policy.fileLimit = 5;
+  policy.fileSizeLimit = 25;
+  policy.totalSizeLimit = 50;
+  const prev = Array.isArray(policy.supportedMimeTypes) ? policy.supportedMimeTypes : [];
+  policy.supportedMimeTypes = [...new Set([...prev, ...allowed])];
+}
 cfg.fileConfig.serverFileSizeLimit = Math.max(25, Number(cfg.fileConfig.serverFileSizeLimit) || 0);
 cfg.fileConfig.clientImageResize = {
   ...cfg.fileConfig.clientImageResize,
