@@ -41,6 +41,11 @@ const allowed = [
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 ];
+// Allow users to see and select the models already approved in the deployment.
+// This does not add new providers or models.
+cfg.interface ??= {};
+cfg.interface.modelSelect = true;
+
 cfg.fileConfig ??= {};
 cfg.fileConfig.endpoints ??= {};
 const d = cfg.fileConfig.endpoints.default ??= {};
@@ -61,7 +66,7 @@ cfg.fileConfig.clientImageResize = {
   maxHeight: 1900,
 };
 if (!apply) {
-  process.stdout.write('Valid config; dry run only. Proposed policy: 5 files, 25MB per file, 50MB total.\n');
+  process.stdout.write('Valid config; dry run only. Model selector enabled; proposed policy: 5 files, 25MB per file, 50MB total.\n');
   process.exit(0);
 }
 const output = yaml.dump(cfg, { lineWidth: -1, noRefs: true });
